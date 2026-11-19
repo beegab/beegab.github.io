@@ -15,7 +15,7 @@
   let bg = null, grainPat = null;
   let flowers = [], butterflies = [], bees = [], bits = [];
   let hovered = null, armed = null, lastPointer = "mouse";
-  let t = 0;
+  let t = 0, hoverStart = 0;
 
   const hrefFor = (p) => p.page || `project.html?id=${encodeURIComponent(p.id)}`;
   const isExternal = (p) => /^https?:\/\//.test(p.page || "");
@@ -190,23 +190,46 @@
     const R0 = Math.max(28, Math.min(115, colW * 0.36, field / (rows + 2.6)));
     const rowGap = rows > 1 ? Math.max(0, Math.min(field * 0.28, (field - R0 * 3) / (rows - 1))) : 0;
 
+    // shuffle which project lands in which slot so rows don't read in order
+    const slots = projects.map((_, i) => i);
+    for (let k = slots.length - 1; k > 0; k--) {
+      const j = Math.floor(r() * (k + 1));
+      [slots[k], slots[j]] = [slots[j], slots[k]];
+    }
+
     projects.forEach((p, i) => {
-      const row = Math.floor(i / cols), c = i % cols;
+      const slot = slots[i];
+      const row = Math.floor(slot / cols), c = slot % cols;
       const inRow = Math.min(cols, n - row * cols);
-      const offset = ((cols - inRow) * colW) / 2 + (row % 2 ? colW * 0.18 : -colW * 0.06);
-      const by = H + 6 - (rows - 1 - row) * rowGap;
+      const offset = ((cols - inRow) * colW) / 2 + (row % 2 ? colW * 0.3 : -colW * 0.1);
+      // each stem is planted at its own depth, not on a shared row line
+      const by = H + 6 - (rows - 1 - row) * rowGap + (r() - 0.5) * rowGap * 0.7;
       const typeGuess = p.flower || BG.TYPES[i % BG.TYPES.length];
-      const R = R0 * (0.82 + r() * 0.3) * (typeGuess === "sunflower" ? 1.08 : 1);
-      const headMin = topLimit + R, headMax = by - R * 2.4;
-      // back rows bloom high, front rows lower, so heads don't stack in one band
-      const frac = (rows > 1 ? (row / (rows - 1)) * 0.55 : 0.2) + r() * 0.3;
-      const hy = headMin + Math.max(0, headMax - headMin) * frac;
-      const L = Math.min(R * 5.5, Math.max(R * 2.2, by - hy));
+      const R = R0 * (0.72 + r() * 0.5) * (typeGuess === "sunflower" ? 1.08 : 1);
+      const headMin = topLimit + R, headMax = by - R * 2.2;
+      // mostly back rows high and front rows low, with plenty of wobble
+      const frac = (rows > 1 ? (row / (rows - 1)) * 0.4 : 0.1) + r() * 0.6;
+      const hy = headMin + Math.max(0, headMax - headMin) * Math.min(1, frac);
+      const L = Math.min(R * 6, Math.max(R * 2.2, by - hy));
       const spec = BG.makeSpec(p, i, R, L);
-      let bx = offset + (c + 0.5) * colW + (r() - 0.5) * colW * 0.2;
-      bx = Math.max(R - spec.hx + 8, Math.min(W - R - spec.hx - 8, bx));
+      const bx = offset + (c + 0.5) * colW + (r() - 0.5) * colW * 0.7;
       flowers.push({ p, spec, x: bx, y: by, cache: {}, phase: r() * 6.28, next: 0 });
     });
+
+    // nudge stems sideways so blooms don't sit on top of each other
+    const headOf = (f) => ({ x: f.x + f.spec.hx, y: f.y - f.spec.L });
+    for (let pass = 0; pass < 40; pass++) {
+      for (let a = 0; a < flowers.length; a++)
+        for (let b = a + 1; b < flowers.length; b++) {
+          const A = flowers[a], B = flowers[b], ha = headOf(A), hb = headOf(B);
+          const need = (A.spec.R + B.spec.R) * 0.95, dx = hb.x - ha.x, dy = hb.y - ha.y;
+          const dist = Math.hypot(dx, dy);
+          if (dist >= need) continue;
+          const push = ((need - dist) / 2) * (Math.abs(dx) < 1 ? (a % 2 ? 1 : -1) : Math.sign(dx));
+          A.x -= push * 0.5; B.x += push * 0.5;
+        }
+      for (const f of flowers) f.x = Math.max(f.spec.R - f.spec.hx + 8, Math.min(W - f.spec.R - f.spec.hx - 8, f.x));
+    }
     flowers.sort((a, b) => a.y - b.y);
   }
 
@@ -218,8 +241,10 @@
   }
 
   function drawFlower(f) {
-    if (t >= f.next || !f.cache.canvas) {
-      BG.renderFlower(f.spec, f.cache, t, { cw, ch, fs, collapsed: f === hovered });
+    // the hovered flower animates every frame; the rest refresh a few times a second
+    if (f === hovered || t >= f.next || !f.cache.canvas) {
+      const hover = f === hovered && !reduce ? { t: t - hoverStart } : null;
+      BG.renderFlower(f.spec, f.cache, t, { cw, ch, fs, collapsed: f === hovered, hover });
       f.next = t + 0.09 + Math.random() * 0.05;
     }
     const c = f.cache;
@@ -403,6 +428,7 @@
     canvas.style.cursor = f ? "pointer" : "default";
     if (!f) { tip.hidden = true; armed = null; return; }
     f.next = 0; // re-render now, collapsed
+    hoverStart = t;
     tip.innerHTML = "";
     const idx = projects.indexOf(f.p);
     const state = document.createElement("small");
@@ -478,6 +504,7 @@
   addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => { setHover(null); resize(); }, 120); });
 
   // start once the mono font is ready so the glyphs render in it
+  if (BG.scrambleOnHover) BG.scrambleOnHover();
   const start = () => { resize(); requestAnimationFrame(frame); };
   if (document.fonts && document.fonts.load) {
     Promise.race([document.fonts.load(`500 12px "IBM Plex Mono"`), new Promise((r) => setTimeout(r, 1200))]).then(start, start);

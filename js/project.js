@@ -33,10 +33,10 @@
   fig.setAttribute("aria-hidden", "true");
   const hero = document.createElement("canvas");
   fig.append(hero, el("span", "hero-cap", "hover to measure"));
-  let measured = false, t = 0, lastDraw = -1;
-  fig.addEventListener("pointerenter", () => { measured = true; lastDraw = -1; });
+  let measured = false, hoverAt = 0, t = 0, lastDraw = -1;
+  fig.addEventListener("pointerenter", () => { measured = true; hoverAt = performance.now() / 1000; lastDraw = -1; });
   fig.addEventListener("pointerleave", () => { measured = false; lastDraw = -1; });
-  const opts = () => ({ fs: 10, cw: 10 * 0.64, ch: 10 * 0.92, collapsed: measured });
+  const opts = () => ({ fs: 10, cw: 10 * 0.64, ch: 10 * 0.92, collapsed: measured, hover: measured && !reduce ? { t: t - hoverAt } : null });
   const paint = () => {
     BG.renderFlower(spec, cache, t, opts());
     const g = hero.getContext("2d");
@@ -46,7 +46,7 @@
   };
   const loop = (now) => {
     t = now / 1000;
-    if (lastDraw < 0 || (!reduce && t - lastDraw > 0.1)) { paint(); lastDraw = t; }
+    if (lastDraw < 0 || (!reduce && (measured || t - lastDraw > 0.1))) { paint(); lastDraw = t; }
     requestAnimationFrame(loop);
   };
   const go = () => requestAnimationFrame(loop);
@@ -116,4 +116,5 @@
     };
     nav.append(mk(prev, `← ${prev.title}`), mk(next, `${next.title} →`));
   }
+  if (BG.scrambleOnHover) BG.scrambleOnHover();
 })();

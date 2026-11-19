@@ -22,18 +22,18 @@
   fig.setAttribute("aria-hidden", "true");
   const hero = document.createElement("canvas");
   fig.append(hero, el("span", "hero-cap", "hover to measure"));
-  let measured = false, lastDraw = -1;
-  fig.addEventListener("pointerenter", () => { measured = true; lastDraw = -1; });
+  let measured = false, hoverAt = 0, lastDraw = -1;
+  fig.addEventListener("pointerenter", () => { measured = true; hoverAt = performance.now() / 1000; lastDraw = -1; });
   fig.addEventListener("pointerleave", () => { measured = false; lastDraw = -1; });
   const paint = (t) => {
-    BG.renderFlower(spec, cache, t, { fs: 10, cw: 6.4, ch: 9.2, collapsed: measured });
+    BG.renderFlower(spec, cache, t, { fs: 10, cw: 6.4, ch: 9.2, collapsed: measured, hover: measured && !reduce ? { t: t - hoverAt } : null });
     hero.width = cache.canvas.width; hero.height = cache.canvas.height;
     hero.style.width = cache.w + "px"; hero.style.height = cache.h + "px";
     hero.getContext("2d").drawImage(cache.canvas, 0, 0);
   };
   const loop = (now) => {
     const t = now / 1000;
-    if (lastDraw < 0 || (!reduce && t - lastDraw > 0.1)) { paint(t); lastDraw = t; }
+    if (lastDraw < 0 || (!reduce && (measured || t - lastDraw > 0.1))) { paint(t); lastDraw = t; }
     requestAnimationFrame(loop);
   };
   const go = () => requestAnimationFrame(loop);
@@ -65,4 +65,5 @@
   const back = el("a", "btn about-work", "See the work →");
   back.href = "index.html";
   root.append(back);
+  if (BG.scrambleOnHover) BG.scrambleOnHover();
 })();

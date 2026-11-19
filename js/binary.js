@@ -184,18 +184,36 @@ window.BG = (() => {
     const tick = Math.floor(t * 5);
     const cols = Math.ceil(w / cw), rows = Math.ceil(h / ch);
     const stemW = cw * 0.75;
+    // hover: a "measurement" ripple spreads out from the bloom
+    const hov = o.hover;
+    const hcx = halfW + spec.hx, hcy = top - spec.L;
+    const front = hov ? hov.t * 240 : 0, band = Math.max(10, spec.R * 0.22);
+    const fastTick = Math.floor(t * 14);
     for (let cy = 0; cy < rows; cy++)
       for (let cx = 0; cx < cols; cx++) {
-        const x = cx * cw + cw / 2, y = cy * ch + ch / 2;
+        let x = cx * cw + cw / 2, y = cy * ch + ch / 2;
         const [d, part] = density(spec, x - halfW, y - top, stemW);
         // halftone dropout: dense areas stay solid, edges break up into specks
         if (d <= 0 || hash(cx, cy, spec.seed) > Math.min(1, d * d * 1.6)) continue;
-        const a = (0.28 + 0.72 * d) * (collapsed ? 1 : 0.82);
-        g.fillStyle = part === 0 ? spec.tint : STEM_TINT;
+        let measured = collapsed, wave = 0;
+        if (hov) {
+          const dist = Math.hypot(x - hcx, y - hcy);
+          measured = dist < front; // qubits collapse once the ripple reaches them
+          wave = Math.exp(-((dist - front) ** 2) / (2 * band * band));
+          const h3 = hash(cx, cy, spec.seed + 3) * 6.283;
+          // lift and push outward on the wavefront, then a gentle float
+          const ux = dist > 0 ? (x - hcx) / dist : 0, uy = dist > 0 ? (y - hcy) / dist : 0;
+          x += ux * wave * 4 + Math.sin(t * 2.2 + h3) * 1.2;
+          y += uy * wave * 4 - wave * 3 + Math.cos(t * 1.8 + h3) * 1.2;
+        }
+        const a = Math.min(1, (0.28 + 0.72 * d) * (measured ? 1 : 0.82) + wave * 0.5);
+        g.fillStyle = wave > 0.55 ? "#ffffff" : part === 0 ? spec.tint : STEM_TINT;
         const qubit = hash(cx, cy, spec.seed + 2) < (part === 0 ? 0.16 : 0.07);
         let bit = hash(cx, cy, spec.seed + 1) < 0.5;
-        if (!collapsed && hash(cx, cy, spec.seed + 7 + tick) < 0.025) bit = !bit; // bit flips
-        if (qubit && !collapsed) {
+        if (!measured && hash(cx, cy, spec.seed + 7 + tick) < 0.025) bit = !bit; // bit flips
+        if (wave > 0.3) bit = hash(cx, cy, spec.seed + 11 + fastTick) < 0.5; // scramble on the wavefront
+        else if (hov && hash(cx, cy, spec.seed + 13 + tick) < 0.04) bit = !bit; // keep a little life after
+        if (qubit && !measured) {
           const k = 0.5 + 0.3 * Math.sin(t * 2.4 + hash(cx, cy, spec.seed + 3) * 6.283);
           g.globalAlpha = a * k; g.fillText("1", x, y);
           g.globalAlpha = a * (1 - k); g.fillText("0", x, y);
@@ -250,5 +268,35 @@ window.BG = (() => {
     ".YKYKY.",
   ];
 
-  return { FONT, TINTS, STEM_TINT, TYPES, hash, rng, strSeed, makeSpec, stemX, renderFlower, drawMask, BUTTERFLY, BEE };
+  /* Text links: on hover, letters scramble into 1s and 0s and resolve back
+     left to right. Only touches plain-text elements. */
+  function scrambleOnHover(root = document) {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    root.querySelectorAll(".corner.link, .btn").forEach((el) => {
+      if (el.dataset.scramble || el.children.length) return;
+      el.dataset.scramble = "1";
+      const text = el.textContent;
+      el.setAttribute("aria-label", el.getAttribute("aria-label") || text);
+      // keep the width steady while letters change
+      el.style.minWidth = el.getBoundingClientRect().width + "px";
+      let raf = 0;
+      const run = () => {
+        cancelAnimationFrame(raf);
+        const start = performance.now(), dur = 420;
+        const step = (now) => {
+          const p = Math.min(1, (now - start) / dur);
+          el.textContent = [...text].map((chr, i) => {
+            if (/\s|[|⟩→↗←·]/.test(chr)) return chr;
+            return i / text.length < p ? chr : Math.random() < 0.5 ? "1" : "0";
+          }).join("");
+          if (p < 1) raf = requestAnimationFrame(step);
+        };
+        raf = requestAnimationFrame(step);
+      };
+      el.addEventListener("mouseenter", run);
+      el.addEventListener("focus", run);
+    });
+  }
+
+  return { FONT, TINTS, STEM_TINT, TYPES, hash, rng, strSeed, makeSpec, stemX, renderFlower, drawMask, scrambleOnHover, BUTTERFLY, BEE };
 })();
