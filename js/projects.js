@@ -26,7 +26,7 @@ window.SITE = {
   name: "Brianna Gabaldon",
   alias: "beegab",
   role: "Portfolio",
-  tagline: "Ideas and works in progress. Each flower is a project.",
+  tagline: "Ideas and works in progress. Click on a flower to explore a project.",
 
   // Flower hover effects. A list rotates through those effects flower by flower.
   // Available: ripple, bloom, decode, rain, scatter, wind, glitch, pulse, spin,
