@@ -244,34 +244,34 @@
     const field = H - topLimit;
     // size blooms to the space: every flower needs roughly a (2.6R)² patch to stay clear
     const fit = Math.sqrt((W * field) / n) / 2.6;
-    const R0 = Math.max(26, Math.min(115, colW * 0.36, field / (rows + 2.6), fit));
-    const rowGap = rows > 1 ? Math.max(0, Math.min(field * 0.28, (field - R0 * 3) / (rows - 1))) : 0;
-
-    // shuffle which project lands in which slot so rows don't read in order
-    const slots = projects.map((_, i) => i);
-    for (let k = slots.length - 1; k > 0; k--) {
+    const R0 = Math.max(26, Math.min(130, fit));
+    // plant blooms one at a time in the biggest open space left ("best candidate"
+    // sampling), so the garden fills evenly at any screen size, with no empty patches
+    const order = projects.map((_, i) => i);
+    for (let k = order.length - 1; k > 0; k--) {
       const j = Math.floor(r() * (k + 1));
-      [slots[k], slots[j]] = [slots[j], slots[k]];
+      [order[k], order[j]] = [order[j], order[k]];
     }
-
-    projects.forEach((p, i) => {
-      const slot = slots[i];
-      const row = Math.floor(slot / cols), c = slot % cols;
-      const inRow = Math.min(cols, n - row * cols);
-      const offset = ((cols - inRow) * colW) / 2 + (row % 2 ? colW * 0.3 : -colW * 0.1);
-      // each stem is planted at its own depth, not on a shared row line
-      const by = H + 6 - (rows - 1 - row) * rowGap + (r() - 0.5) * rowGap * 0.7;
+    const placed = [];
+    for (const i of order) {
+      const p = projects[i];
       const typeGuess = p.flower || BG.TYPES[i % BG.TYPES.length];
-      const R = R0 * (0.72 + r() * 0.5) * (typeGuess === "sunflower" ? 1.08 : 1);
-      const headMin = topLimit + R, headMax = by - R * 2.2;
-      // mostly back rows high and front rows low, with plenty of wobble
-      const frac = (rows > 1 ? (row / (rows - 1)) * 0.4 : 0.1) + r() * 0.6;
-      const hy = headMin + Math.max(0, headMax - headMin) * Math.min(1, frac);
-      const L = Math.min(R * 6, Math.max(R * 2.2, by - hy));
-      const spec = BG.makeSpec(p, i, R, L);
-      const bx = offset + (c + 0.5) * colW + (r() - 0.5) * colW * 0.7;
-      flowers.push({ p, spec, x: bx, y: by, cache: {}, phase: r() * 6.28, next: 0, effect: effectFor(i) });
-    });
+      const R = R0 * (0.75 + r() * 0.45) * (typeGuess === "sunflower" ? 1.08 : 1);
+      const by = H + 6 - r() * Math.min(70, field * 0.12); // stems planted at slightly different depths
+      const xLo = R + 10, xHi = Math.max(xLo, W - R - 10);
+      const yLo = topLimit + R, yHi = Math.max(yLo, by - R * 2.4);
+      let best = { x: (xLo + xHi) / 2, y: (yLo + yHi) / 2 }, bestScore = -Infinity;
+      for (let k = 0; k < 90; k++) {
+        const x = xLo + r() * (xHi - xLo), y = yLo + r() * (yHi - yLo);
+        // distance to the nearest bloom's edge; the frame counts as a soft neighbour
+        let score = Math.min(x - xLo, xHi - x, y - yLo, yHi - y) + R * 0.7;
+        for (const q of placed) score = Math.min(score, Math.hypot(x - q.x, y - q.y) - (R + q.R) * 1.12);
+        if (score > bestScore) { bestScore = score; best = { x, y }; }
+      }
+      placed.push({ x: best.x, y: best.y, R });
+      const spec = BG.makeSpec(p, i, R, Math.max(R * 2.2, by - best.y));
+      flowers.push({ p, spec, x: best.x - spec.hx, y: by, cache: {}, phase: r() * 6.28, next: 0, effect: effectFor(i) });
+    }
 
     // push blooms apart (sideways and up/down) so every flower stays visible
     const headOf = (f) => ({ x: f.x + f.spec.hx, y: f.y - f.spec.L });
@@ -298,7 +298,7 @@
       flowers.forEach(clampFlower);
       if (!moved) break;
     }
-    flowers.sort((a, b) => a.y - b.y);
+    flowers.sort((a, b) => (a.y - a.spec.L) - (b.y - b.spec.L));
   }
 
   const swayOf = (f) => (reduce ? 0 : Math.sin(t * 0.9 + f.phase) * 0.022);
