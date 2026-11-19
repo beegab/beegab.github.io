@@ -28,11 +28,12 @@ window.SITE = {
   role: "Portfolio",
   tagline: "Ideas and works in progress. Each flower is a project.",
 
-  // Flower hover effect. "signal" = decode + glitch + sparkle combined.
-  // Other single effects: ripple, bloom, decode, rain, scatter, wind, glitch,
-  // pulse, spin, repel, sparkle, melt. "mixed" gives every flower a different
-  // one to compare (the tooltip names it).
-  hoverEffect: "signal",
+  // Flower hover effects. A list rotates through those effects flower by flower.
+  // Available: ripple, bloom, decode, rain, scatter, wind, glitch, pulse, spin,
+  // repel, sparkle, melt, and signal (decode + glitch + sparkle combined).
+  // Use one name (e.g. "glitch") for every flower, or "mixed" to cycle through
+  // all of them with the effect named in each tooltip.
+  hoverEffect: ["decode", "glitch", "sparkle", "signal"],
 
   // About page (about.html). One string per paragraph.
   about: [

@@ -264,6 +264,17 @@ window.BG = (() => {
   };
   const EFFECTS = Object.keys(HOVER_FX);
 
+  /* Which effect flower number i gets, from SITE.hoverEffect:
+     "mixed" = every effect in turn; a name = that one everywhere;
+     a list like ["decode", "glitch"] = rotate through just those. */
+  function effectFor(choice, i) {
+    const list = (Array.isArray(choice) ? choice : choice === "mixed" || !choice ? EFFECTS : [choice])
+      .map((e) => String(e).toLowerCase())
+      .filter((e) => HOVER_FX[e]);
+    const use = list.length ? list : EFFECTS;
+    return use[i % use.length];
+  }
+
   /* Draws a flower into cache.canvas. Origin (ox, oy) is the base of the stem. */
   function renderFlower(spec, cache, t, o) {
     const { cw, ch, fs, collapsed } = o;
@@ -410,5 +421,5 @@ window.BG = (() => {
     });
   }
 
-  return { FONT, TINTS, STEM_TINT, TYPES, EFFECTS, hash, rng, strSeed, makeSpec, stemX, renderFlower, drawMask, scrambleOnHover, BUTTERFLY, BEE };
+  return { FONT, TINTS, STEM_TINT, TYPES, EFFECTS, effectFor, hash, rng, strSeed, makeSpec, stemX, renderFlower, drawMask, scrambleOnHover, BUTTERFLY, BEE };
 })();

@@ -19,8 +19,8 @@
 
   // hover effects: SITE.hoverEffect = "mixed" gives every flower a different
   // one (to compare), or set it to a single name like "ripple" for all of them
-  const fxChoice = (SITE.hoverEffect || "mixed").toLowerCase();
-  const effectFor = (i) => (BG.EFFECTS.includes(fxChoice) ? fxChoice : BG.EFFECTS[i % BG.EFFECTS.length]);
+  const fxChoice = SITE.hoverEffect || "mixed";
+  const effectFor = (i) => BG.effectFor(fxChoice, i);
 
   const hrefFor = (p) => p.page || `project.html?id=${encodeURIComponent(p.id)}`;
   const isExternal = (p) => /^https?:\/\//.test(p.page || "");

@@ -36,8 +36,7 @@
   let measured = false, hoverAt = 0, t = 0, lastDraw = -1;
   fig.addEventListener("pointerenter", () => { measured = true; hoverAt = performance.now() / 1000; lastDraw = -1; });
   fig.addEventListener("pointerleave", () => { measured = false; lastDraw = -1; });
-  const fxChoice = (SITE.hoverEffect || "mixed").toLowerCase();
-  const effect = BG.EFFECTS.includes(fxChoice) ? fxChoice : BG.EFFECTS[i % BG.EFFECTS.length];
+  const effect = BG.effectFor(SITE.hoverEffect || "mixed", i); // same effect as this flower in the garden
   let hmx = null, hmy = null;
   fig.addEventListener("pointermove", (e) => { const rc = hero.getBoundingClientRect(); hmx = e.clientX - rc.left; hmy = e.clientY - rc.top; });
   const opts = () => ({ fs: 10, cw: 10 * 0.64, ch: 10 * 0.92, collapsed: measured,

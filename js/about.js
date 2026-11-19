@@ -26,7 +26,7 @@
   fig.addEventListener("pointerenter", () => { measured = true; hoverAt = performance.now() / 1000; lastDraw = -1; });
   fig.addEventListener("pointerleave", () => { measured = false; lastDraw = -1; });
   const paint = (t) => {
-    BG.renderFlower(spec, cache, t, { fs: 10, cw: 6.4, ch: 9.2, collapsed: measured, hover: measured && !reduce ? { t: t - hoverAt, effect: BG.EFFECTS.includes((SITE.hoverEffect || "").toLowerCase()) ? SITE.hoverEffect.toLowerCase() : "melt" } : null });
+    BG.renderFlower(spec, cache, t, { fs: 10, cw: 6.4, ch: 9.2, collapsed: measured, hover: measured && !reduce ? { t: t - hoverAt, effect: BG.effectFor(SITE.hoverEffect || "mixed", 0) } : null });
     hero.width = cache.canvas.width; hero.height = cache.canvas.height;
     hero.style.width = cache.w + "px"; hero.style.height = cache.h + "px";
     hero.getContext("2d").drawImage(cache.canvas, 0, 0);
