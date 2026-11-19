@@ -15,6 +15,66 @@
     return n;
   };
 
+  /* Image carousel: opens over the page, arrows / keys / swipe to move. */
+  function makeCarousel(images) {
+    const dlg = el("dialog", "carousel");
+    dlg.setAttribute("aria-label", "Image viewer");
+    const stage = el("div", "carousel-stage");
+    const img = document.createElement("img");
+    stage.append(img);
+    const prev = el("button", "carousel-nav prev", "←");
+    const next = el("button", "carousel-nav next", "→");
+    prev.setAttribute("aria-label", "Previous image");
+    next.setAttribute("aria-label", "Next image");
+    const close = el("button", "carousel-close", "×");
+    close.setAttribute("aria-label", "Close");
+    const bar = el("div", "carousel-bar");
+    const count = el("span", "carousel-count");
+    const cap = el("span", "carousel-cap");
+    bar.append(count, cap);
+    dlg.append(close, prev, stage, next, bar);
+    document.body.append(dlg);
+
+    let at = 0, opener = null;
+    const many = images.length > 1;
+    prev.hidden = next.hidden = !many;
+    const show = (k) => {
+      at = (k + images.length) % images.length;
+      const im = images[at];
+      img.src = im.src; img.alt = im.alt || "";
+      count.textContent = many ? `${String(at + 1).padStart(2, "0")} / ${String(images.length).padStart(2, "0")}` : "";
+      cap.textContent = im.caption || "";
+      // warm the neighbours so moving feels instant
+      [at + 1, at - 1].forEach((n) => { const pre = new Image(); pre.src = images[(n + images.length) % images.length].src; });
+    };
+    prev.addEventListener("click", () => show(at - 1));
+    next.addEventListener("click", () => show(at + 1));
+    close.addEventListener("click", () => dlg.close());
+    dlg.addEventListener("click", (e) => { if (e.target === dlg || e.target === stage) dlg.close(); });
+    dlg.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { e.preventDefault(); show(at + 1); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); show(at - 1); }
+    });
+    let sx = null;
+    stage.addEventListener("touchstart", (e) => { sx = e.touches[0].clientX; }, { passive: true });
+    stage.addEventListener("touchend", (e) => {
+      if (sx == null) return;
+      const dx = e.changedTouches[0].clientX - sx;
+      if (Math.abs(dx) > 40) show(at + (dx < 0 ? 1 : -1));
+      sx = null;
+    });
+    dlg.addEventListener("close", () => { document.body.classList.remove("no-scroll"); if (opener) opener.focus(); });
+    return {
+      open(k, from) {
+        opener = from || null;
+        show(k);
+        document.body.classList.add("no-scroll");
+        dlg.showModal();
+        (many ? next : close).focus();
+      },
+    };
+  }
+
   if (i < 0) {
     root.append(el("p", "label", "|∅⟩"), el("h1", "title", "Not yet observed"),
       el("p", "desc", "We couldn't find that project. Head back to the garden and choose another flower."));
@@ -76,13 +136,16 @@
   if (p.images && p.images.length) {
     gallery.classList.toggle("single", p.images.length === 1);
     if (p.gallery) gallery.classList.add(p.gallery);
-    p.images.forEach((im) => {
+    const viewer = makeCarousel(p.images);
+    p.images.forEach((im, k) => {
       const f = el("figure", "frame");
       const img = document.createElement("img");
       img.src = im.src; img.alt = im.alt || ""; img.loading = "lazy";
-      // click an image to open it full size
+      // click an image to open the carousel at that image
       const zoom = document.createElement("a");
-      zoom.href = im.src; zoom.target = "_blank"; zoom.rel = "noopener";
+      zoom.href = im.src;
+      zoom.setAttribute("aria-label", `View image ${k + 1} of ${p.images.length}${im.caption ? ": " + im.caption : ""}`);
+      zoom.addEventListener("click", (e) => { e.preventDefault(); viewer.open(k, zoom); });
       zoom.append(img);
       f.append(zoom);
       if (im.caption) f.append(el("figcaption", null, im.caption));
