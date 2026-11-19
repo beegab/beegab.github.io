@@ -161,6 +161,90 @@ window.BG = (() => {
     return [best, 1];
   }
 
+
+  /* ---------- hover effects ----------
+     Each takes one glyph's context and returns how to move / light it:
+     { ox, oy, glow (0..1), scramble, alpha, measured, ghost } */
+  const ease = (k) => 1 - Math.exp(-k);
+  const HOVER_FX = {
+    // a measurement wave spreads out; qubits collapse as it passes
+    ripple(c) {
+      const wave = Math.exp(-((c.dist - c.ht * 240) ** 2) / (2 * c.band * c.band));
+      return { ox: c.ux * wave * 4 + Math.sin(c.t * 2.2 + c.h * 6.28) * 1.2,
+        oy: c.uy * wave * 4 - wave * 3 + Math.cos(c.t * 1.8 + c.h * 6.28) * 1.2,
+        glow: wave, scramble: wave > 0.3, measured: c.dist < c.ht * 240 };
+    },
+    // the bloom opens up and breathes
+    bloom(c) {
+      if (!c.isHead) return { measured: true };
+      const k = 0.16 * ease(c.ht * 5) + 0.03 * Math.sin(c.t * 3);
+      return { ox: (c.x - c.hcx) * k, oy: (c.y - c.hcy) * k, glow: 0.2 * ease(c.ht * 5) + (Math.sin(c.t * 3 + c.h * 6) > 0.85 ? 0.4 : 0), measured: true };
+    },
+    // scrambled until a scan line passes top to bottom and decrypts it
+    decode(c) {
+      const rel = c.y - (c.hcy - c.R * 1.3 + c.ht * 320);
+      if (rel > 12) return { scramble: true, alpha: 0.5, measured: false };
+      if (rel > -12) return { glow: 1 - Math.abs(rel) / 12, scramble: true, measured: true };
+      return { measured: true };
+    },
+    // digits drip downward like digital rain
+    rain(c) {
+      const drop = (c.t * 1.1 + c.h) % 1, e = ease(c.ht * 4);
+      return { oy: (drop * 12 - 3) * e, alpha: 1 - drop * 0.6 * e, scramble: drop < 0.15, glow: drop < 0.08 ? 0.6 : 0, measured: true };
+    },
+    // bursts apart, then springs back together
+    scatter(c) {
+      const amp = 34 * Math.exp(-c.ht * 3) * (0.4 + c.h);
+      return { ox: (c.ux + (c.h - 0.5) * 0.9) * amp, oy: (c.uy + (c.h2 - 0.5) * 0.9) * amp,
+        glow: Math.exp(-c.ht * 3) * 0.8, scramble: c.ht < 0.5, measured: c.ht > 0.4 };
+    },
+    // a breeze rolls through; taller parts sway more
+    wind(c) {
+      const e = ease(c.ht * 3), gust = Math.sin(c.y * 0.045 - c.t * 4.5);
+      return { ox: gust * 7 * e * (0.3 + c.heightFrac), oy: Math.cos(c.x * 0.05 - c.t * 3) * 1.5 * e,
+        glow: gust > 0.92 ? 0.35 : 0, measured: true };
+    },
+    // rows tear sideways with a chromatic split
+    glitch(c) {
+      const bandRow = Math.floor(c.cy / 3), frame = Math.floor(c.t * 9);
+      const burst = hash(bandRow, frame, c.seed) < (c.ht < 0.35 ? 0.6 : 0.2);
+      return { ox: burst ? (hash(bandRow, frame + 1, c.seed) - 0.5) * 24 : 0, ghost: burst, scramble: burst, glow: burst ? 0.25 : 0, measured: true };
+    },
+    // a heartbeat of rings, over and over
+    pulse(c) {
+      const period = 0.9, ph = (c.ht % period) / period;
+      const wave = Math.exp(-((c.dist - ph * c.R * 1.8) ** 2) / (2 * c.band * c.band)) * (1 - ph * 0.5);
+      return { ox: c.ux * wave * 3, oy: c.uy * wave * 3, glow: wave, scramble: wave > 0.5, measured: true };
+    },
+    // the bloom slowly turns like a dial
+    spin(c) {
+      if (!c.isHead) return { measured: true };
+      const a = c.ht * 1.1 * (1 - Math.min(1, c.dist / (c.R * 1.4)) * 0.4);
+      const dx = c.x - c.hcx, dy = c.y - c.hcy;
+      return { ox: dx * Math.cos(a) - dy * Math.sin(a) - dx, oy: dx * Math.sin(a) + dy * Math.cos(a) - dy, glow: 0.1, measured: true };
+    },
+    // digits push away from your cursor
+    repel(c) {
+      if (c.mx == null) return { measured: true };
+      const dx = c.x - c.mx, dy = c.y - c.my, d = Math.hypot(dx, dy) || 1, r0 = 70;
+      if (d > r0) return { measured: true };
+      const f = (r0 - d) / r0;
+      return { ox: (dx / d) * f * 24, oy: (dy / d) * f * 24, glow: f, scramble: f > 0.5, measured: true };
+    },
+    // random digits flash and twinkle
+    sparkle(c) {
+      const on = hash(c.cx, c.cy, c.seed + Math.floor(c.t * 6)) < 0.07;
+      return { oy: on ? -2 : 0, glow: on ? 1 : 0, scramble: on, alpha: on ? 1 : 0.75, measured: true };
+    },
+    // the bloom slowly melts down the stem
+    melt(c) {
+      if (!c.isHead) return { measured: true };
+      const drip = (0.3 + c.h * c.h * 1.4) * 22 * ease(c.ht * 1.2);
+      return { oy: drip, alpha: 1 - Math.min(0.5, drip / 60), scramble: c.h2 < 0.05, measured: true };
+    },
+  };
+  const EFFECTS = Object.keys(HOVER_FX);
+
   /* Draws a flower into cache.canvas. Origin (ox, oy) is the base of the stem. */
   function renderFlower(spec, cache, t, o) {
     const { cw, ch, fs, collapsed } = o;
@@ -184,35 +268,44 @@ window.BG = (() => {
     const tick = Math.floor(t * 5);
     const cols = Math.ceil(w / cw), rows = Math.ceil(h / ch);
     const stemW = cw * 0.75;
-    // hover: a "measurement" ripple spreads out from the bloom
+    // hover effect (see HOVER_FX below)
     const hov = o.hover;
+    const fx = hov ? HOVER_FX[hov.effect] || HOVER_FX.ripple : null;
     const hcx = halfW + spec.hx, hcy = top - spec.L;
-    const front = hov ? hov.t * 240 : 0, band = Math.max(10, spec.R * 0.22);
+    const band = Math.max(10, spec.R * 0.22);
     const fastTick = Math.floor(t * 14);
+    const env = { t, ht: hov ? hov.t : 0, hcx, hcy, R: spec.R, L: spec.L, top, band, seed: spec.seed, fastTick,
+      mx: hov && hov.mx != null ? hov.mx : null, my: hov && hov.my != null ? hov.my : null };
     for (let cy = 0; cy < rows; cy++)
       for (let cx = 0; cx < cols; cx++) {
         let x = cx * cw + cw / 2, y = cy * ch + ch / 2;
         const [d, part] = density(spec, x - halfW, y - top, stemW);
         // halftone dropout: dense areas stay solid, edges break up into specks
         if (d <= 0 || hash(cx, cy, spec.seed) > Math.min(1, d * d * 1.6)) continue;
-        let measured = collapsed, wave = 0;
-        if (hov) {
+        let measured = collapsed, glow = 0, scramble = false, alphaMul = 1, ghost = false;
+        if (fx) {
           const dist = Math.hypot(x - hcx, y - hcy);
-          measured = dist < front; // qubits collapse once the ripple reaches them
-          wave = Math.exp(-((dist - front) ** 2) / (2 * band * band));
-          const h3 = hash(cx, cy, spec.seed + 3) * 6.283;
-          // lift and push outward on the wavefront, then a gentle float
-          const ux = dist > 0 ? (x - hcx) / dist : 0, uy = dist > 0 ? (y - hcy) / dist : 0;
-          x += ux * wave * 4 + Math.sin(t * 2.2 + h3) * 1.2;
-          y += uy * wave * 4 - wave * 3 + Math.cos(t * 1.8 + h3) * 1.2;
+          const r = fx({ ...env, x, y, cx, cy, dist, ux: dist > 0 ? (x - hcx) / dist : 0, uy: dist > 0 ? (y - hcy) / dist : 0,
+            h: hash(cx, cy, spec.seed + 3), h2: hash(cx, cy, spec.seed + 5), isHead: part === 0,
+            heightFrac: Math.max(0, Math.min(1, (top - y) / (spec.L + spec.R))) });
+          x += r.ox || 0; y += r.oy || 0;
+          glow = r.glow || 0; scramble = !!r.scramble; ghost = !!r.ghost;
+          if (r.alpha != null) alphaMul = r.alpha;
+          if (r.measured != null) measured = r.measured;
         }
-        const a = Math.min(1, (0.28 + 0.72 * d) * (measured ? 1 : 0.82) + wave * 0.5);
-        g.fillStyle = wave > 0.55 ? "#ffffff" : part === 0 ? spec.tint : STEM_TINT;
+        const a = Math.max(0, Math.min(1, (0.28 + 0.72 * d) * (measured ? 1 : 0.82) * alphaMul + glow * 0.5));
+        const base = part === 0 ? spec.tint : STEM_TINT;
         const qubit = hash(cx, cy, spec.seed + 2) < (part === 0 ? 0.16 : 0.07);
         let bit = hash(cx, cy, spec.seed + 1) < 0.5;
         if (!measured && hash(cx, cy, spec.seed + 7 + tick) < 0.025) bit = !bit; // bit flips
-        if (wave > 0.3) bit = hash(cx, cy, spec.seed + 11 + fastTick) < 0.5; // scramble on the wavefront
-        else if (hov && hash(cx, cy, spec.seed + 13 + tick) < 0.04) bit = !bit; // keep a little life after
+        if (scramble) bit = hash(cx, cy, spec.seed + 11 + fastTick) < 0.5;
+        else if (hov && hash(cx, cy, spec.seed + 13 + tick) < 0.03) bit = !bit; // a little life while hovered
+        if (ghost) { // chromatic split for the glitch effect
+          g.globalAlpha = a * 0.45;
+          g.fillStyle = "#ff7aa2"; g.fillText(bit ? "1" : "0", x + 2.5, y);
+          g.fillStyle = "#7ad7ff"; g.fillText(bit ? "1" : "0", x - 2.5, y);
+        }
+        g.fillStyle = glow > 0.55 ? "#ffffff" : base;
         if (qubit && !measured) {
           const k = 0.5 + 0.3 * Math.sin(t * 2.4 + hash(cx, cy, spec.seed + 3) * 6.283);
           g.globalAlpha = a * k; g.fillText("1", x, y);
@@ -298,5 +391,5 @@ window.BG = (() => {
     });
   }
 
-  return { FONT, TINTS, STEM_TINT, TYPES, hash, rng, strSeed, makeSpec, stemX, renderFlower, drawMask, scrambleOnHover, BUTTERFLY, BEE };
+  return { FONT, TINTS, STEM_TINT, TYPES, EFFECTS, hash, rng, strSeed, makeSpec, stemX, renderFlower, drawMask, scrambleOnHover, BUTTERFLY, BEE };
 })();

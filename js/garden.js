@@ -15,7 +15,12 @@
   let bg = null, grainPat = null;
   let flowers = [], butterflies = [], bees = [], bits = [];
   let hovered = null, armed = null, lastPointer = "mouse";
-  let t = 0, hoverStart = 0;
+  let t = 0, hoverStart = 0, mouseX = null, mouseY = null;
+
+  // hover effects: SITE.hoverEffect = "mixed" gives every flower a different
+  // one (to compare), or set it to a single name like "ripple" for all of them
+  const fxChoice = (SITE.hoverEffect || "mixed").toLowerCase();
+  const effectFor = (i) => (BG.EFFECTS.includes(fxChoice) ? fxChoice : BG.EFFECTS[i % BG.EFFECTS.length]);
 
   const hrefFor = (p) => p.page || `project.html?id=${encodeURIComponent(p.id)}`;
   const isExternal = (p) => /^https?:\/\//.test(p.page || "");
@@ -213,7 +218,7 @@
       const L = Math.min(R * 6, Math.max(R * 2.2, by - hy));
       const spec = BG.makeSpec(p, i, R, L);
       const bx = offset + (c + 0.5) * colW + (r() - 0.5) * colW * 0.7;
-      flowers.push({ p, spec, x: bx, y: by, cache: {}, phase: r() * 6.28, next: 0 });
+      flowers.push({ p, spec, x: bx, y: by, cache: {}, phase: r() * 6.28, next: 0, effect: effectFor(i) });
     });
 
     // nudge stems sideways so blooms don't sit on top of each other
@@ -243,7 +248,12 @@
   function drawFlower(f) {
     // the hovered flower animates every frame; the rest refresh a few times a second
     if (f === hovered || t >= f.next || !f.cache.canvas) {
-      const hover = f === hovered && !reduce ? { t: t - hoverStart } : null;
+      const c0 = f.cache;
+      const hover = f === hovered && !reduce
+        ? { t: t - hoverStart, effect: f.effect,
+            mx: mouseX == null || c0.ox == null ? null : mouseX - f.x + c0.ox,
+            my: mouseY == null || c0.oy == null ? null : mouseY - f.y + c0.oy }
+        : null;
       BG.renderFlower(f.spec, f.cache, t, { cw, ch, fs, collapsed: f === hovered, hover });
       f.next = t + 0.09 + Math.random() * 0.05;
     }
@@ -432,7 +442,10 @@
     tip.innerHTML = "";
     const idx = projects.indexOf(f.p);
     const state = document.createElement("small");
-    state.textContent = `|${idx.toString(2).padStart(4, "0")}⟩ measured`;
+    const fxIdx = BG.EFFECTS.indexOf(f.effect) + 1;
+    state.textContent = fxChoice === "mixed"
+      ? `|${idx.toString(2).padStart(4, "0")}⟩ · effect ${String(fxIdx).padStart(2, "0")}: ${f.effect}`
+      : `|${idx.toString(2).padStart(4, "0")}⟩ measured`;
     const title = document.createElement("strong");
     title.textContent = f.p.title;
     const blurb = document.createElement("span");
@@ -476,7 +489,8 @@
   canvas.addEventListener("pointermove", (e) => {
     if (e.pointerType === "touch") return;
     lastPointer = e.pointerType;
-    setHover(flowerAt(...toLocal(e)));
+    [mouseX, mouseY] = toLocal(e);
+    setHover(flowerAt(mouseX, mouseY));
   });
   canvas.addEventListener("pointerleave", (e) => { if (e.pointerType !== "touch") setHover(null); });
   canvas.addEventListener("click", (e) => {
