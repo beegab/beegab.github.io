@@ -49,7 +49,8 @@ window.PROJECTS = [
     title: "Stamped: A Passport for Life",
     blurb: "A digital passport for shows, films, books, meals and everything you do.",
     description: [
-      "Stamped is an iPhone app I designed and built for remembering what you've done and planning what's next. Every experience becomes a stamp in a personal passport: shows, films, books, albums, games, meals, or anything else, like a hike or a class. Each stamp holds the date, the place and who you were with.",
+      "Living in New York, I found myself up to so much: shows, films, dinners, readings, classes, long walks across the city. I wanted a way to log all of it, to remember what I'd done and keep track of what I wanted to do next, and nothing held all of it in one place.",
+      "So I built Stamped, a multi-dimensional app for our multi-dimensional lives. Every experience becomes a stamp in a personal passport: shows, films, books, albums, games, meals, or anything else, like a hike or a class. Each stamp holds the date, the place and who you were with.",
       "Plans live next to memories. Stamped, Up Next and Interested sit side by side, so the concert you're going to, the book you want to read and the class you'd like to take are all in one place.",
       "It's social without being loud. You can tag friends whether or not they use the app, follow people who share your interests, plan things together, and choose exactly what each follower can see.",
       "Also inside: a wall of all your stamps, Top Picks, a Collection for owned vinyl and Blu-rays, and a calendar view of your year.",
