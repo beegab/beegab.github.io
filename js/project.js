@@ -75,6 +75,7 @@
   const gallery = el("div", "gallery");
   if (p.images && p.images.length) {
     gallery.classList.toggle("single", p.images.length === 1);
+    if (p.gallery) gallery.classList.add(p.gallery);
     p.images.forEach((im) => {
       const f = el("figure", "frame");
       const img = document.createElement("img");

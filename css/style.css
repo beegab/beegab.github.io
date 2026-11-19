@@ -204,6 +204,8 @@ body {
 .link-btn { border-color: var(--accent); }
 .link-row { display: flex; flex-wrap: wrap; gap: 12px; }
 .gallery.single { grid-template-columns: 1fr; }
+.gallery.phones { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+.gallery.phones .frame { border-radius: 14px; overflow: hidden; }
 .frame a { display: block; cursor: zoom-in; }
 .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin: 36px 0; }
 .frame { margin: 0; border: 1px solid var(--line); background: rgba(16, 22, 16, 0.5); }

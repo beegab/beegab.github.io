@@ -12,7 +12,8 @@
    status      – e.g. "idea", "sketching", "in progress", "done"
    flower      – daisy | tulip | lily | rose | star | sunflower
    color       – glyph tint: pink | lilac | butter | peach | sky | coral | mint | snow
-   images      – optional list of { src, alt } (put files in /images)
+   images      – optional list of { src, alt, caption } (put files in /images)
+   gallery     – optional: "phones" lays tall phone screenshots four across
    link        – optional external link (App Store, Instagram, itch.io, etc.)
    linkLabel   – optional text for that link's button
    links       – optional list of extra buttons: { label, href }
@@ -66,6 +67,13 @@ window.PROJECTS = [
     status: "live on the App Store",
     flower: "rose",
     color: "peach",
+    gallery: "phones", // tall phone screenshots sit four across
+    images: [
+      { src: "images/stamped-01-stamp.jpg", alt: "Stamped screen for a single stamp: a Phoebe Bridgers concert at the Hollywood Bowl, with who you went with and photos.", caption: "A stamp" },
+      { src: "images/stamped-02-all-stamps.jpg", alt: "Stamped's All stamps wall, with Top Picks and a grid of stamps for films, books, albums and events.", caption: "All your stamps" },
+      { src: "images/stamped-03-recap.jpg", alt: "Stamped's Week in Review recap card showing six stamps from the past week, ready to share.", caption: "Week in Review" },
+      { src: "images/stamped-04-profile.jpg", alt: "A Stamped profile with stamp count, your people, and a Week in Review summary.", caption: "Profile" },
+    ],
     link: "https://apps.apple.com/us/app/stamped-a-passport-for-life/id6779494313",
     linkLabel: "Get it on the App Store →",
   },
