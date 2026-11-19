@@ -133,7 +133,9 @@
   desc.filter(Boolean).forEach((para) => root.append(el("p", "desc", para)));
 
   const gallery = el("div", "gallery");
-  if (p.images && p.images.length) {
+  if (p.wip) {
+    gallery.hidden = true; // placeholders get no sketch frames
+  } else if (p.images && p.images.length) {
     gallery.classList.toggle("single", p.images.length === 1);
     if (p.gallery) gallery.classList.add(p.gallery);
     const viewer = makeCarousel(p.images);

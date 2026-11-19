@@ -18,6 +18,7 @@
    linkLabel   – optional text for that link's button
    links       – optional list of extra buttons: { label, href }
                  (e.g. PDFs in /files); they open in a new tab
+   wip         – true for a placeholder: shows "Work in progress" only
    demo        – optional { title, text }: with a link, shows a big
                  "play the demo" panel instead of image frames
    page        – optional: send the flower somewhere else entirely
@@ -189,33 +190,30 @@ window.PROJECTS = [
   {
     id: "mushroom-choir",
     title: "Mushroom Choir",
-    blurb: "Click the mushrooms and they sing in harmony.",
-    description:
-      "A musical toy: a ring of pixel mushrooms, each one a note. Play them together and the forest floor lights up.",
-    tags: ["sound", "toy"],
-    status: "in progress",
+    blurb: "Work in progress.",
+    description: [],
+    tags: [],
+    wip: true, // no images or sketch frames yet
     flower: "rose",
     color: "peach",
   },
   {
     id: "pixel-pond",
     title: "Pixel Pond",
-    blurb: "Koi made of pixels swimming through your photos.",
-    description:
-      "Upload a photo and it becomes a pond. The fish nibble the colors and slowly rearrange the picture.",
-    tags: ["photo", "generative"],
-    status: "idea",
+    blurb: "Work in progress.",
+    description: [],
+    tags: [],
+    wip: true, // no images or sketch frames yet
     flower: "star",
     color: "sky",
   },
   {
     id: "dream-seeds",
     title: "Dream Seeds",
-    blurb: "Type a dream and watch it grow into a plant.",
-    description:
-      "Every word becomes a leaf, petal or root. Long dreams grow tall vines; short ones bloom fast.",
-    tags: ["text", "generative"],
-    status: "idea",
+    blurb: "Work in progress.",
+    description: [],
+    tags: [],
+    wip: true, // no images or sketch frames yet
     flower: "lily",
     color: "coral",
   },
@@ -233,11 +231,10 @@ window.PROJECTS = [
   {
     id: "honey-archive",
     title: "Honey Archive",
-    blurb: "A beehive where every cell holds a tiny memory.",
-    description:
-      "A honeycomb gallery: each hexagon is a little drawing, and the bees carry new ones in over time.",
-    tags: ["gallery", "collection"],
-    status: "idea",
+    blurb: "Work in progress.",
+    description: [],
+    tags: [],
+    wip: true, // no images or sketch frames yet
     flower: "rose",
     color: "snow",
   },
