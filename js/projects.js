@@ -128,6 +128,11 @@ window.PROJECTS = [
     status: "idea",
     flower: "daisy",
     color: "pink",
+    images: [
+      { src: "images/opt-in-01-overlay.svg", alt: "Sketch of the headset view: three visitors who opted in are framed with name tags showing their name and what they do, while two private visitors appear as faint dashed outlines.", caption: "01 · The overlay: who chose to be seen" },
+      { src: "images/opt-in-02-live-feed.svg", alt: "Sketch of a screen in the gallery reading 62% of tonight's visitors opted in, above a row of ones and zeros, one per visitor, with people watching from below.", caption: "02 · The live feed: the room's answer in real time" },
+      { src: "images/opt-in-03-flip.svg", alt: "Sketch of the flipped view: faceless multicolored figures connected by dotted lines to anonymous secrets such as I'm starting over, each with a count of how many people hold it.", caption: "03 · The flip: anonymous secrets, no faces" },
+    ],
   },
   {
     id: "tiny-weather",
