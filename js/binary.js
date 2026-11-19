@@ -243,6 +243,25 @@ window.BG = (() => {
       return { oy: drip, alpha: 1 - Math.min(0.5, drip / 60), scramble: c.h2 < 0.05, measured: true };
     },
   };
+  // decode + glitch + sparkle: scrambled, decrypted top to bottom while rows
+  // tear sideways, then it keeps twinkling with the odd glitch
+  HOVER_FX.signal = (c) => {
+    const dec = HOVER_FX.decode(c);
+    const bandRow = Math.floor(c.cy / 3), frame = Math.floor(c.t * 9);
+    const decoding = c.y > c.hcy - c.R * 1.3 + c.ht * 320 - 40; // still near or ahead of the scan
+    const burst = hash(bandRow, frame, c.seed) < (decoding ? 0.3 : 0.06);
+    const done = dec.measured && !decoding;
+    const twinkle = done && hash(c.cx, c.cy, c.seed + Math.floor(c.t * 6)) < 0.06;
+    return {
+      ox: burst ? (hash(bandRow, frame + 1, c.seed) - 0.5) * (decoding ? 24 : 12) : 0,
+      oy: twinkle ? -2 : 0,
+      ghost: burst,
+      scramble: dec.scramble || burst || twinkle,
+      glow: Math.max(dec.glow || 0, burst ? 0.25 : 0, twinkle ? 1 : 0),
+      alpha: dec.alpha != null ? dec.alpha : twinkle ? 1 : 0.85,
+      measured: dec.measured,
+    };
+  };
   const EFFECTS = Object.keys(HOVER_FX);
 
   /* Draws a flower into cache.canvas. Origin (ox, oy) is the base of the stem. */
