@@ -112,12 +112,17 @@ window.PROJECTS = [
     ],
   },
   {
-    id: "moth-lanterns",
-    title: "Moth Lanterns",
-    blurb: "Glowing paper moths that drift toward your cursor.",
-    description:
-      "An interactive night scene where tiny pixel moths gather around whatever light you carry.\n\nIdea: each moth has its own personality — some shy, some bold — and they remember where you've been.",
-    tags: ["interactive", "night", "generative"],
+    id: "opt-out",
+    title: "Opt Out",
+    blurb: "A data broker profile of you, and the price tag on making it disappear.",
+    description: [
+      "Opt Out is a companion to Opt In. Where Opt In asks what people will give up to be seen, this piece asks what it costs to disappear, and who can afford to.",
+      "Data brokers already know a startling amount: every address you've lived at, your phone numbers, your relatives and who they're connected to, all a search away. The piece begins as a mirror. A wall assembles a people-search profile in ones and zeros: past homes become a trail across a map, phone numbers stack up, and family appears as a constellation of connections.",
+      "Next to the profile, a receipt prints. It lists every broker holding a copy and what it takes to get off each one: the forms, the waiting and the hours of your time, or the yearly fee for a service to do it for you. It's privacy sold as a subscription, and the data creeps back when you stop paying.",
+      "Then you can try to scrub yourself. Pay with time, holding down a button through each manual opt-out, or pay with money and watch the profile dissolve almost instantly. Walk away and it slowly grows back.",
+      "Underneath it all is a question about inequality. People who have to be public, for their work or their safety, are the easiest to find and the hardest to erase, while people with capital can buy their way out. The public price of privacy isn't the same for everyone.",
+    ],
+    tags: ["data brokers", "privacy", "installation", "inequality", "data"],
     status: "idea",
     flower: "tulip",
     color: "lilac",
