@@ -114,13 +114,14 @@ window.PROJECTS = [
   {
     id: "opt-out",
     title: "Opt Out",
-    blurb: "Real data broker profiles of real people, and the real price of making them disappear.",
+    blurb: "Real data broker profiles of real people, and the never-ending price of making them disappear.",
     description: [
       "Opt Out is a companion to Opt In. Where Opt In asks what people will give up to be seen, this piece asks what it costs to disappear, and who can afford to.",
       "To land, it has to be real. The profiles come from consenting volunteers, and from my own data. Data brokers already hold a startling amount: every address you've lived at, your phone numbers, your relatives and who they're connected to. In California alone, 581 data brokers are registered with the state. The wall rebuilds each volunteer's people-search profile in ones and zeros, past homes as a trail across a map, phone numbers stacking up, family as a constellation, and names the sites it came from: Spokeo, Whitepages, BeenVerified, Intelius, TruePeopleSearch, FastPeopleSearch, Radaris, CheckPeople, PublicDataUSA.",
-      "Next to each profile, a receipt prints with the real prices. Removal services sell privacy as a subscription: DeleteMe charges $129 a year for one person, Incogni about $8 a month, Kanary $250 a year. Stop paying, and the protection stops with it.",
-      "The cheaper route costs time instead. In a 2024 Consumer Reports study, manual opt-outs actually beat the paid services: about 70% of listings were gone within a week, while the services removed anywhere from 0% to 59%. Doing it yourself means a form, a confirmation email and a wait for every single site. Even the best public fix depends on your address: California's free DROP platform lets residents send one deletion request to every registered broker, but only if you live in California.",
-      "So the piece asks visitors to try. Pay with time, holding down a button through each manual opt-out, or pay with money and watch the profile dissolve almost instantly. Walk away and it slowly grows back. People who have to be public, for their work or their safety, are the easiest to find and the hardest to erase, while people with capital can buy their way out. The public price of privacy isn't the same for everyone.",
+      "Next to each profile, a receipt prints, and it never stops printing. Getting off a data broker isn't a one-time purchase. Brokers resell records to each other and keep refreshing from public records, so listings you remove come back, and new sites appear that never had your opt-out at all. That's why removal services are subscriptions: they re-scan and re-remove on a loop. DeleteMe charges $129 a year for one person, Incogni about $8 a month, Kanary $250 a year. Over five years that's $645 for DeleteMe and $1,250 for Kanary, and the protection stops the moment you stop paying.",
+      "The cheaper route costs time, again and again. In a 2024 Consumer Reports study, manual opt-outs actually beat the paid services at first: about 70% of listings were gone within a week, while the services removed anywhere from 0% to 59%. But they don't stay gone. Every few months you search yourself again and start over: a form, a confirmation email and a wait for every single site. It's whack-a-mole, and the hours never add up to done.",
+      "Even the best public fix is built around the repeat. California's free DROP platform sends one deletion request to every registered broker, and brokers have to keep checking and deleting every 45 days, because everyone knows the data comes back. But it only covers people who live in California.",
+      "So the piece makes visitors play. Pay with time and the profile becomes a game of whack-a-mole: tap a listing to remove it and another pops up somewhere else, faster than you can keep up. Pay with money and the listings stay down, but only while the meter runs. Walk away and it all grows back. People who have to be public, for their work or their safety, are the easiest to find and the hardest to erase, while people with capital can pay the subscription forever. The public price of privacy isn't a price at all. It's rent.",
     ],
     tags: ["data brokers", "privacy", "installation", "inequality", "data"],
     status: "idea",
@@ -130,6 +131,7 @@ window.PROJECTS = [
       { label: "California data broker registry", href: "https://cppa.ca.gov/data_broker_registry" },
       { label: "Consumer Reports removal study", href: "https://innovation.consumerreports.org/new-report-data-defense-evaluating-people-search-site-removal-services/" },
       { label: "California DROP", href: "https://cppa.ca.gov/data_brokers" },
+      { label: "Why data reappears (Privacy Guides)", href: "https://www.privacyguides.org/en/data-broker-removals/" },
     ],
   },
   {
