@@ -127,6 +127,11 @@ window.PROJECTS = [
     status: "idea",
     flower: "tulip",
     color: "lilac",
+    images: [
+      { src: "images/opt-out-01-mirror.svg", alt: "Sketch of a volunteer's redacted people-search profile: a trail of past addresses across a map, stacked phone numbers, a constellation of relatives, and the people-search sites it was found on.", caption: "01 · The mirror: one volunteer's profile" },
+      { src: "images/opt-out-02-receipt.svg", alt: "Sketch of a receipt titled Privacy, Rented, listing yearly removal-service prices and five-year totals, then manual opt-out checklists that keep repeating as listings reappear.", caption: "02 · The receipt: it never stops printing" },
+      { src: "images/opt-out-03-whack-a-mole.svg", alt: "Sketch of a whack-a-mole board of people-search listings popping out of holes, with a hand tapping one away, a timer, removed and reappeared counters, and an option to pay $129 a year.", caption: "03 · Whack-a-mole: removed 41, reappeared 38" },
+    ],
     links: [
       { label: "California data broker registry", href: "https://cppa.ca.gov/data_broker_registry" },
       { label: "Consumer Reports removal study", href: "https://innovation.consumerreports.org/new-report-data-defense-evaluating-people-search-site-removal-services/" },
