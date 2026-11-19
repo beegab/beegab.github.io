@@ -220,11 +220,10 @@ window.PROJECTS = [
   {
     id: "starlight-postcards",
     title: "Starlight Postcards",
-    blurb: "Animated pixel postcards to send to friends.",
-    description:
-      "A series of looping postcards — sleepy towns, glowing greenhouses, rooftop picnics — each one hiding a secret detail.",
-    tags: ["illustration", "loop"],
-    status: "sketching",
+    blurb: "Work in progress.",
+    description: [],
+    tags: [],
+    wip: true, // no images or sketch frames yet
     flower: "lily",
     color: "mint",
   },

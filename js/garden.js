@@ -37,6 +37,56 @@
   if (SITE.alias || SITE.role)
     document.getElementById("siteLabel").textContent = [SITE.alias, SITE.role].filter(Boolean).join(" · ");
   if (SITE.tagline) document.getElementById("siteTagline").textContent = SITE.tagline;
+
+  /* The name: decodes from 1s and 0s with a brief glitch, then twinkles while
+     hovered. Purely decorative: it isn't a link and does nothing on click. */
+  (function gentleName(el) {
+    if (!el || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const text = el.textContent;
+    el.setAttribute("aria-label", text);
+    el.textContent = "";
+    const letters = [...text].map((ch) => {
+      const sp = document.createElement("span");
+      sp.className = "nl";
+      sp.textContent = ch;
+      sp.setAttribute("aria-hidden", "true");
+      el.append(sp);
+      return sp;
+    }).filter((sp) => sp.textContent.trim());
+    let raf = 0, sparkTimer = 0, hovering = false;
+    const bit = () => (Math.random() < 0.5 ? "1" : "0");
+    const decode = () => {
+      cancelAnimationFrame(raf);
+      el.classList.remove("glitch"); void el.offsetWidth; el.classList.add("glitch");
+      const start = performance.now(), dur = 700;
+      const step = (now) => {
+        const p = Math.min(1, (now - start) / dur);
+        letters.forEach((sp, i) => {
+          const done = i / letters.length < p;
+          sp.classList.toggle("scr", !done);
+          if (!done) sp.dataset.bit = bit();
+        });
+        if (p < 1) raf = requestAnimationFrame(step);
+      };
+      raf = requestAnimationFrame(step);
+    };
+    const sparkle = () => {
+      if (!hovering) return;
+      const picks = letters.slice().sort(() => Math.random() - 0.5).slice(0, 3);
+      picks.forEach((sp) => {
+        sp.classList.add("spark");
+        if (Math.random() < 0.5) { sp.classList.add("scr"); sp.dataset.bit = bit(); }
+        setTimeout(() => sp.classList.remove("spark", "scr"), 320);
+      });
+      sparkTimer = setTimeout(sparkle, 650 + Math.random() * 400);
+    };
+    el.addEventListener("mouseenter", () => { hovering = true; decode(); clearTimeout(sparkTimer); sparkTimer = setTimeout(sparkle, 800); });
+    el.addEventListener("mouseleave", () => {
+      hovering = false;
+      clearTimeout(sparkTimer);
+      letters.forEach((sp) => sp.classList.remove("spark"));
+    });
+  })(document.getElementById("siteTitle"));
   const countEl = document.getElementById("count");
   if (countEl) countEl.textContent = `n = ${String(projects.length).padStart(2, "0")}`;
 
@@ -192,7 +242,9 @@
     cols = Math.ceil(n / rows);
     const colW = W / cols;
     const field = H - topLimit;
-    const R0 = Math.max(28, Math.min(115, colW * 0.36, field / (rows + 2.6)));
+    // size blooms to the space: every flower needs roughly a (2.6R)² patch to stay clear
+    const fit = Math.sqrt((W * field) / n) / 2.6;
+    const R0 = Math.max(26, Math.min(115, colW * 0.36, field / (rows + 2.6), fit));
     const rowGap = rows > 1 ? Math.max(0, Math.min(field * 0.28, (field - R0 * 3) / (rows - 1))) : 0;
 
     // shuffle which project lands in which slot so rows don't read in order
@@ -221,19 +273,30 @@
       flowers.push({ p, spec, x: bx, y: by, cache: {}, phase: r() * 6.28, next: 0, effect: effectFor(i) });
     });
 
-    // nudge stems sideways so blooms don't sit on top of each other
+    // push blooms apart (sideways and up/down) so every flower stays visible
     const headOf = (f) => ({ x: f.x + f.spec.hx, y: f.y - f.spec.L });
-    for (let pass = 0; pass < 40; pass++) {
+    const clampFlower = (f) => {
+      const R = f.spec.R;
+      f.x = Math.max(R - f.spec.hx + 8, Math.min(W - R - f.spec.hx - 8, f.x));
+      const maxL = Math.max(R * 2.2, f.y - (topLimit + R)); // keep the bloom below the header
+      f.spec.L = Math.max(R * 2.2, Math.min(maxL, f.spec.L));
+    };
+    for (let pass = 0; pass < 120; pass++) {
+      let moved = false;
       for (let a = 0; a < flowers.length; a++)
         for (let b = a + 1; b < flowers.length; b++) {
           const A = flowers[a], B = flowers[b], ha = headOf(A), hb = headOf(B);
-          const need = (A.spec.R + B.spec.R) * 0.95, dx = hb.x - ha.x, dy = hb.y - ha.y;
-          const dist = Math.hypot(dx, dy);
+          const need = (A.spec.R + B.spec.R) * 1.08;
+          let dx = hb.x - ha.x, dy = hb.y - ha.y, dist = Math.hypot(dx, dy);
           if (dist >= need) continue;
-          const push = ((need - dist) / 2) * (Math.abs(dx) < 1 ? (a % 2 ? 1 : -1) : Math.sign(dx));
-          A.x -= push * 0.5; B.x += push * 0.5;
+          if (dist < 1) { dx = a % 2 ? 1 : -1; dy = 0.5; dist = Math.hypot(dx, dy); }
+          const push = (need - dist) / 2, ux = dx / dist, uy = dy / dist;
+          A.x -= ux * push; B.x += ux * push;
+          A.spec.L += uy * push; B.spec.L -= uy * push; // moving a head up means a longer stem
+          moved = true;
         }
-      for (const f of flowers) f.x = Math.max(f.spec.R - f.spec.hx + 8, Math.min(W - f.spec.R - f.spec.hx - 8, f.x));
+      flowers.forEach(clampFlower);
+      if (!moved) break;
     }
     flowers.sort((a, b) => a.y - b.y);
   }
@@ -519,6 +582,8 @@
 
   // start once the mono font is ready so the glyphs render in it
   if (BG.scrambleOnHover) BG.scrambleOnHover();
+  // ?debug exposes flower positions for layout checks
+  if (/[?&]debug\b/.test(location.search)) window.gardenDebug = () => flowers.map((f) => ({ title: f.p.title, x: Math.round(f.x + f.spec.hx), y: Math.round(f.y - f.spec.L), R: Math.round(f.spec.R) }));
   const start = () => { resize(); requestAnimationFrame(frame); };
   if (document.fonts && document.fonts.load) {
     Promise.race([document.fonts.load(`500 12px "IBM Plex Mono"`), new Promise((r) => setTimeout(r, 1200))]).then(start, start);
