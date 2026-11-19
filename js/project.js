@@ -167,7 +167,8 @@
     const row = el("div", "link-row");
     buttons.forEach((b) => {
       const a = el("a", b.main ? "btn link-btn" : "btn", b.label);
-      a.href = b.href; a.target = "_blank"; a.rel = "noopener";
+      a.href = b.href;
+      if (/^https?:/.test(b.href)) { a.target = "_blank"; a.rel = "noopener"; }
       row.append(a);
     });
     root.append(row);
