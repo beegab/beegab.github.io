@@ -89,6 +89,8 @@ body {
 }
 .corner.link:hover, .corner.link:focus-visible { opacity: 1; border-bottom-color: var(--cream); }
 .corner.tl { top: 26px; left: 18px; }
+/* the two corner links are navigation, so they read larger */
+.corner.tl, .corner.tr { font-size: clamp(15px, 1.4vw, 22px); letter-spacing: 0.06em; opacity: 0.85; }
 .corner.tr { top: 26px; right: 18px; }
 .corner.bl { bottom: 26px; left: 18px; display: flex; flex-direction: column; gap: 4px; }
 
@@ -99,7 +101,7 @@ body {
   text-align: center;
   pointer-events: none;
 }
-.hud .label { margin: 0 0 14px; }
+.hud .label { margin: 0 0 14px; font-size: clamp(12px, 1vw, 15px); }
 .hud .title { font-size: clamp(44px, 7.5vw, 96px); text-shadow: 0 2px 30px rgba(10, 16, 10, 0.5); }
 .tagline { margin: 14px auto 0; max-width: 34ch; font-size: clamp(17px, 2vw, 21px); opacity: 0.85; }
 
@@ -227,7 +229,7 @@ body {
 }
 
 @media (max-width: 600px) {
-  .corner.tl, .corner.tr { top: 12px; }
+  .corner.tl, .corner.tr { top: 12px; font-size: 14px; }
   .card-head { grid-template-columns: 1fr; justify-items: start; }
   .hero { justify-self: center; }
   .neighbors .btn { flex: 1 1 100%; text-align: center; }
