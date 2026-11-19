@@ -122,9 +122,10 @@ window.PROJECTS = [
       "Opt Out is a companion to Opt In. Where Opt In asks what people will give up to be seen, this piece asks what it costs to disappear, and who can afford to.",
       "To land, it has to be real. The profiles come from consenting volunteers, and from my own data. Data brokers already hold a startling amount: every address you've lived at, your phone numbers, your relatives and who they're connected to. In California alone, 581 data brokers are registered with the state. The wall rebuilds each volunteer's people-search profile in ones and zeros, past homes as a trail across a map, phone numbers stacking up, family as a constellation, and names the sites it came from: Spokeo, Whitepages, BeenVerified, Intelius, TruePeopleSearch, FastPeopleSearch, Radaris, CheckPeople, PublicDataUSA.",
       "Next to each profile, a receipt prints, and it never stops printing. Getting off a data broker isn't a one-time purchase. Brokers resell records to each other and keep refreshing from public records, so listings you remove come back, and new sites appear that never had your opt-out at all. That's why removal services are subscriptions: they re-scan and re-remove on a loop. DeleteMe charges $129 a year for one person, Incogni about $8 a month, Kanary $250 a year. Over five years that's $645 for DeleteMe and $1,250 for Kanary, and the protection stops the moment you stop paying.",
-      "The cheaper route costs time, again and again. In a 2024 Consumer Reports study, manual opt-outs actually beat the paid services at first: about 70% of listings were gone within a week, while the services removed anywhere from 0% to 59%. But they don't stay gone. Every few months you search yourself again and start over: a form, a confirmation email and a wait for every single site. It's whack-a-mole, and the hours never add up to done.",
+      "The cheaper route costs time, again and again. In a 2024 Consumer Reports study, manual opt-outs actually beat the paid services at first: about 70% of listings were gone within a week, while the services removed anywhere from 0% to 59%. But they don't stay gone. Every few months you search yourself again and start over: a form, a confirmation email and a wait for every single site, and the hours never add up to done.",
       "Even the best public fix is built around the repeat. California's free DROP platform sends one deletion request to every registered broker, and brokers have to keep checking and deleting every 45 days, because everyone knows the data comes back. But it only covers people who live in California.",
-      "So the piece makes visitors play. Pay with time and the profile becomes a game of whack-a-mole: tap a listing to remove it and another pops up somewhere else, faster than you can keep up. Pay with money and the listings stay down, but only while the meter runs. Walk away and it all grows back. People who have to be public, for their work or their safety, are the easiest to find and the hardest to erase, while people with capital can pay the subscription forever. The public price of privacy isn't a price at all. It's rent.",
+      "The piece ends with something to take home. At a kiosk, each visitor can print their own receipt: what it costs to rent your privacy back, year by year, what the manual route asks of your time, and when you'll need to do it all again. At the bottom is a QR code that leads to a guide: how to search yourself on the sites that sell you, how to opt out of each one, and where to find free help like California's DROP.",
+      "People who have to be public, for their work or their safety, are the easiest to find and the hardest to erase, while people with capital can pay the subscription forever. The public price of privacy isn't a price at all. It's rent.",
     ],
     tags: ["data brokers", "privacy", "installation", "inequality", "data"],
     status: "idea",
@@ -133,7 +134,7 @@ window.PROJECTS = [
     images: [
       { src: "images/opt-out-01-mirror.svg", alt: "Sketch of a volunteer's redacted people-search profile: a trail of past addresses across a map, stacked phone numbers, a constellation of relatives, and the people-search sites it was found on.", caption: "01 · The mirror: one volunteer's profile" },
       { src: "images/opt-out-02-receipt.svg", alt: "Sketch of a receipt titled Privacy, Rented, listing yearly removal-service prices and five-year totals, then manual opt-out checklists that keep repeating as listings reappear.", caption: "02 · The receipt: it never stops printing" },
-      { src: "images/opt-out-03-whack-a-mole.svg", alt: "Sketch of a whack-a-mole board of people-search listings popping out of holes, with a hand tapping one away, a timer, removed and reappeared counters, and an option to pay $129 a year.", caption: "03 · Whack-a-mole: removed 41, reappeared 38" },
+      { src: "images/opt-out-03-takeaway.svg", alt: "Sketch of a kiosk printing a take-home receipt titled The Price of Being Found, listing removal-service prices and the manual opt-out routine, with a QR code at the bottom to search yourself and learn how to opt out.", caption: "03 · The takeaway: a receipt to print and keep" },
     ],
     links: [
       { label: "California data broker registry", href: "https://cppa.ca.gov/data_broker_registry" },
@@ -194,8 +195,8 @@ window.PROJECTS = [
     description: [],
     tags: [],
     wip: true, // no images or sketch frames yet
-    flower: "rose",
-    color: "peach",
+    flower: "tulip",
+    color: "mint",
   },
   {
     id: "pixel-pond",
@@ -204,8 +205,8 @@ window.PROJECTS = [
     description: [],
     tags: [],
     wip: true, // no images or sketch frames yet
-    flower: "star",
-    color: "sky",
+    flower: "daisy",
+    color: "butter",
   },
   {
     id: "dream-seeds",

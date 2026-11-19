@@ -137,7 +137,7 @@
     fs = Math.round(Math.max(8, Math.min(11, W / 130)));
     cw = fs * 0.64;
     ch = fs * 0.92;
-    topLimit = hud.getBoundingClientRect().bottom + 12;
+    topLimit = hud.getBoundingClientRect().bottom + 56; // breathing room under the name
     buildBackground();
     buildGrain();
     layoutFlowers();
