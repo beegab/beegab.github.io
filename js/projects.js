@@ -161,15 +161,24 @@ window.PROJECTS = [
     ],
   },
   {
-    id: "tiny-weather",
-    title: "Tiny Weather",
-    blurb: "A pocket-sized sky that mirrors the real forecast.",
-    description:
-      "A 64×64 pixel window whose clouds, rain and sunsets follow the live weather where you are.",
-    tags: ["data art", "pixel"],
+    id: "dark-patterns",
+    title: "Dark Patterns",
+    blurb: "An interactive gallery of the design tricks that steer you. Try to escape each one.",
+    description: [
+      "Dark patterns are the design tricks that nudge us into choices we didn't mean to make: the cancel button that's impossible to find, the cookie banner where \"Accept all\" glows and \"Reject\" hides, the countdown timer that resets when you refresh. They aren't accidents. In a 2024 review of 642 subscription websites and apps by consumer protection authorities in 26 countries, nearly 76% used at least one possible dark pattern, and nearly 67% used more than one.",
+      "This piece turns them into a game. Each level is a simple task with a trap built in, drawn from the patterns researchers have named and catalogued. Cancel a subscription and get lost in a maze of screens (hard to cancel). Decline cookies when the right button barely looks like a button (visual interference). Check out and find something you never chose already in your cart (sneaking), or a fee that appears on the last step (hidden costs). Say no and be told \"No thanks, I don't like saving money\" (confirmshaming). Race a timer that isn't real (fake urgency) for the \"last 2 in stock\" (fake scarcity). Untick a box that was checked for you (preselection), then read a double negative twice to understand what you're agreeing to (trick wording).",
+      "A scoreboard keeps count of your time, your clicks and how many times you were tricked. After each level the interface flips, and the trick is shown in X-ray: the pattern's name, how it works on your attention, and where it's been documented.",
+      "At the end you get a receipt of everything you almost agreed to. The point is to make the invisible visible: once you can name a pattern, you start seeing it everywhere, and it loses some of its power over you.",
+    ],
+    tags: ["interactive", "UX", "dark patterns", "consumer protection", "web"],
     status: "idea",
     flower: "sunflower",
-    color: "butter",
+    color: "coral",
+    links: [
+      { label: "Catalog of dark patterns (deceptive.design)", href: "https://www.deceptive.design/types" },
+      { label: "FTC report: Bringing Dark Patterns to Light", href: "https://www.ftc.gov/reports/bringing-dark-patterns-light" },
+      { label: "2024 review of 642 sites and apps (FTC)", href: "https://www.ftc.gov/news-events/news/press-releases/2024/07/ftc-icpen-gpen-announce-results-review-use-dark-patterns-affecting-subscription-services-privacy" },
+    ],
   },
   {
     id: "mushroom-choir",
