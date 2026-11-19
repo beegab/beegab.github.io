@@ -132,7 +132,7 @@ window.PROJECTS = [
     flower: "tulip",
     color: "lilac",
     images: [
-      { src: "images/opt-out-01-mirror.svg", alt: "Sketch of a volunteer's redacted people-search profile: a trail of past addresses across a map, stacked phone numbers, a constellation of relatives, and the people-search sites it was found on.", caption: "01 · The mirror: one volunteer's profile" },
+      { src: "images/opt-out-01-mirror.svg?v=2", alt: "Sketch styled like an old hacker-movie terminal in glowing green: a targeting reticle over a silhouette, a radar tracing six past addresses, listed phone numbers, a network of known associates, a download bar at 100%, the people-search sites as sources, and a TOP SECRET stamp crossed out and replaced with public.", caption: "01 · The mirror: spy gear for everyday information" },
       { src: "images/opt-out-02-receipt.svg", alt: "Sketch of a receipt titled Privacy, Rented, listing yearly removal-service prices and five-year totals, then manual opt-out checklists that keep repeating as listings reappear.", caption: "02 · The receipt: it never stops printing" },
       { src: "images/opt-out-03-takeaway.svg", alt: "Sketch of a kiosk printing a take-home receipt titled The Price of Being Found, listing removal-service prices and the manual opt-out routine, with a QR code at the bottom to search yourself and learn how to opt out.", caption: "03 · The takeaway: a receipt to print and keep" },
     ],
