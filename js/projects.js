@@ -140,7 +140,7 @@ window.PROJECTS = [
     images: [
       { src: "images/opt-in-01-overlay.svg", alt: "Sketch of the headset view: three visitors who opted in are framed with name tags showing their name and what they do, while two private visitors appear as faint dashed outlines.", caption: "01 · The overlay: who chose to be seen" },
       { src: "images/opt-in-02-live-feed.svg", alt: "Sketch of a screen in the gallery reading 62% of tonight's visitors opted in, above a row of ones and zeros, one per visitor, with people watching from below.", caption: "02 · The live feed: the room's answer in real time" },
-      { src: "images/opt-in-03-flip.svg?v=2", alt: "Sketch of the flipped view: a row of colored-in, faceless drawn figures below anonymous secrets such as I'm starting over, each with a tally of how many people hold it and no link to anyone.", caption: "03 · The flip: secrets counted, never linked to a person" },
+      { src: "images/opt-in-03-flip.svg?v=3", alt: "Sketch of the flipped view: anonymous secrets such as I'm starting over hang by dotted strings from a row of colored-in, faceless drawn figures, each secret with a tally of how many people hold it.", caption: "03 · The flip: secrets held by drawings, not people" },
     ],
   },
   {
