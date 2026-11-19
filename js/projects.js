@@ -130,7 +130,8 @@ window.PROJECTS = [
       "Opt In is my first digital art project: an augmented reality installation about the trade between visibility and privacy.",
       "At an art exhibit, you almost want people to know who you are and what you do. So visitors can choose to opt in. Through an AR headset, facial recognition overlays each person who opted in with their name and what they do, so you can see who is who as you move through the room. The question underneath is simple: will people sacrifice their data for visibility?",
       "A live feed on a screen in the space tracks the answer in real time, showing what percentage of the people who attended chose to opt in.",
-      "Then the piece flips. The room becomes a visualization of everyone as multicolored, hand-drawn figures, with no faces and no names. Visitors can share a secret, and it appears anonymously, showing how many people around you are holding which secrets. The installation moves back and forth between the two: being known and being honest, identity and anonymity.",
+      "Then the piece flips. Everyone becomes a multicolored, hand-drawn figure, with no faces and no names. Visitors can share a secret, and it appears anonymously with a count of how many people are holding it. Unlike the overlay, which follows real people as they move, nothing here is tied to anyone: the figures are drawings, not tracked bodies, so a secret can never be traced back to a person.",
+      "The installation moves back and forth between the two states: being known and being honest, identity and anonymity.",
     ],
     tags: ["AR", "installation", "privacy", "facial recognition", "data"],
     status: "idea",
@@ -139,7 +140,7 @@ window.PROJECTS = [
     images: [
       { src: "images/opt-in-01-overlay.svg", alt: "Sketch of the headset view: three visitors who opted in are framed with name tags showing their name and what they do, while two private visitors appear as faint dashed outlines.", caption: "01 · The overlay: who chose to be seen" },
       { src: "images/opt-in-02-live-feed.svg", alt: "Sketch of a screen in the gallery reading 62% of tonight's visitors opted in, above a row of ones and zeros, one per visitor, with people watching from below.", caption: "02 · The live feed: the room's answer in real time" },
-      { src: "images/opt-in-03-flip.svg", alt: "Sketch of the flipped view: faceless multicolored figures connected by dotted lines to anonymous secrets such as I'm starting over, each with a count of how many people hold it.", caption: "03 · The flip: anonymous secrets, no faces" },
+      { src: "images/opt-in-03-flip.svg?v=2", alt: "Sketch of the flipped view: a row of colored-in, faceless drawn figures below anonymous secrets such as I'm starting over, each with a tally of how many people hold it and no link to anyone.", caption: "03 · The flip: secrets counted, never linked to a person" },
     ],
   },
   {
