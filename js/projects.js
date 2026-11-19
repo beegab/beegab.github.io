@@ -40,7 +40,7 @@ window.SITE = {
     "I've always loved the place where technology meets people: technology not as the point, but as a tool for how we live, connect and look after one another.",
     "That thread runs through everything I do. It started with a B.S. in computer science at Virginia Tech, carried into an M.S. in Global Security, Conflict and Cybercrime at NYU, and keeps pulling me toward new intersections. Public interest technology and cybersecurity are my specialties. My NYU thesis, which earned distinction, looked at how cybersecurity frameworks built for big companies leave small New York businesses behind.",
     "Beyond that, I'm simply a lover of technology: experimenting with it, building with it and learning from it.",
-    "You'll also find me at the McCarren Demonstration Garden, Free Food Harlem and the East Williamsburg Cinema Club, or writing on Substack. This garden is where my ideas grow. Some are finished; most are still seeds.",
+    "You'll also find me at the McCarren Demonstration Garden, Free Food Harlem and the East Williamsburg Cinema Club, or writing on Substack.",
   ],
   // Links shown on the About page: { label, href }
   links: [
