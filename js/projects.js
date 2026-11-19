@@ -189,14 +189,14 @@ window.PROJECTS = [
     ],
   },
   {
-    id: "mushroom-choir",
-    title: "Mushroom Choir",
-    blurb: "Work in progress.",
+    id: "substack",
+    title: "Substack",
+    blurb: "My writing on where tech, society and ethics meet, with a focus on public interest technology.",
     description: [],
-    tags: [],
-    wip: true, // no images or sketch frames yet
+    tags: ["writing", "public interest tech", "cybersecurity"],
     flower: "tulip",
     color: "mint",
+    page: "https://substack.com/@beegabaldon", // opens Substack in a new tab
   },
   {
     id: "pixel-pond",
