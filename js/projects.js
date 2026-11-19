@@ -18,6 +18,8 @@
    linkLabel   – optional text for that link's button
    links       – optional list of extra buttons: { label, href }
                  (e.g. PDFs in /files); they open in a new tab
+   demo        – optional { title, text }: with a link, shows a big
+                 "play the demo" panel instead of image frames
    page        – optional: send the flower somewhere else entirely
                  instead of the built-in project page (outside
                  websites open in a new tab)
@@ -177,6 +179,7 @@ window.PROJECTS = [
     color: "coral",
     link: "dark-patterns.html",
     linkLabel: "Play the demo →",
+    demo: { title: "Try to escape", text: "5 levels · about 3 minutes · works on your phone" },
     links: [
       { label: "Catalog of dark patterns (deceptive.design)", href: "https://www.deceptive.design/types" },
       { label: "FTC report: Bringing Dark Patterns to Light", href: "https://www.ftc.gov/reports/bringing-dark-patterns-light" },

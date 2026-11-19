@@ -8,29 +8,37 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' fill='%231d291e'/><text x='8' y='12.5' font-family='monospace' font-size='12' text-anchor='middle' fill='%23e8edc4'>1</text><text x='8' y='12.5' font-family='monospace' font-size='12' text-anchor='middle' fill='%23e8edc4' opacity='.5'>0</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261118235521">
-  <link rel="stylesheet" href="css/dark-patterns.css?v=20261118235521">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&family=Pixelify+Sans:wght@400;500;700&family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=20261119000817">
+  <link rel="stylesheet" href="css/dark-patterns.css?v=20261119000817">
 </head>
 <body class="dp-page">
   <header class="dp-top">
     <a class="btn" href="project.html?id=dark-patterns">← Dark Patterns</a>
     <div class="dp-hud" aria-live="polite">
-      <span>Level <b id="hudLevel">–</b></span>
+      <span>Lvl <b id="hudLevel">–</b></span>
       <span>Time <b id="hudTime">00:00</b></span>
-      <span>Clicks <b id="hudClicks">0</b></span>
-      <span>Tricked <b id="hudTricked">0</b></span>
+      <span>Clicks <b id="hudClicks">000</b></span>
+      <span class="tricked">Tricked <b id="hudTricked">0</b></span>
     </div>
   </header>
 
   <p class="dp-goal" id="goal" aria-live="polite"></p>
 
   <main class="dp-frame">
-    <div class="dp-stage" id="stage"></div>
+    <div class="dp-window">
+      <div class="dp-titlebar">
+        <span class="dp-tb-box" aria-hidden="true"></span>
+        <span class="dp-name" id="winTitle">try_to_escape.exe</span>
+        <button class="dp-tb-box" id="winClose" aria-label="Close window">✕</button>
+      </div>
+      <div class="dp-stage" id="stage"></div>
+      <div class="dp-status" aria-live="off"><span id="status">ready.</span><span id="statusRight">1 tab · 0 friends</span></div>
+    </div>
   </main>
 
-  <p class="dp-foot">A demo by Brianna Gabaldon. Every brand here is made up; every trick is real.</p>
+  <p class="dp-foot">A demo by Brianna Gabaldon. Every brand here is made up. Every trick is real.</p>
 
-  <script src="js/dark-patterns.js?v=20261118235521"></script>
+  <script src="js/dark-patterns.js?v=20261119000817"></script>
 </body>
 </html>

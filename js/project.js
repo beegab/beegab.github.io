@@ -151,6 +151,17 @@
       if (im.caption) f.append(el("figcaption", null, im.caption));
       gallery.append(f);
     });
+  } else if (p.demo && p.link) {
+    // a playable piece: show the way in instead of empty sketch frames
+    gallery.className = "demo-panel";
+    const a = el("a", "demo-link");
+    a.href = p.link;
+    a.append(
+      el("span", "demo-kicker", p.demo.kicker || "▶ Playable demo"),
+      el("span", "demo-title", p.demo.title || p.title),
+      el("span", "demo-meta", p.demo.text || ""),
+      el("span", "demo-cta", p.linkLabel || "Play →"));
+    gallery.append(a);
   } else {
     for (let k = 0; k < 3; k++) {
       const f = el("div", "frame empty");
@@ -161,7 +172,7 @@
   root.append(gallery);
 
   const buttons = [];
-  if (p.link) buttons.push({ label: p.linkLabel || "View elsewhere →", href: p.link, main: true });
+  if (p.link && !p.demo) buttons.push({ label: p.linkLabel || "View elsewhere →", href: p.link, main: true });
   (p.links || []).forEach((l, k) => buttons.push({ label: `${l.label} ↗`, href: l.href, main: !p.link && k === 0 }));
   if (buttons.length) {
     const row = el("div", "link-row");

@@ -43,6 +43,21 @@
     clicks: document.getElementById("hudClicks"),
     tricked: document.getElementById("hudTricked"),
   };
+  const winTitle = document.getElementById("winTitle");
+  const statusEl = document.getElementById("status");
+  const statusRight = document.getElementById("statusRight");
+  let statusTimer = 0;
+  const setStatus = (lines, right) => {
+    clearInterval(statusTimer);
+    let i = 0;
+    statusEl.textContent = lines[0];
+    if (right != null) statusRight.textContent = right;
+    if (lines.length > 1) statusTimer = setInterval(() => { i = (i + 1) % lines.length; statusEl.textContent = lines[i]; }, 2200);
+  };
+  const chrome = (title, lines, right) => { winTitle.textContent = title; setStatus(lines, right); };
+  document.getElementById("winClose").addEventListener("click", () => setStatus(["nice try. this window doesn't close either.", "(that's a dark pattern too.)"]));
+  const pad = (n) => String(n).padStart(3, "0");
+
   const state = { idx: -1, clicks: 0, tricked: 0, elapsed: 0, levelStart: 0, levelClicks: 0, running: false, results: [], cleanup: null };
 
   const fmt = (ms) => {
@@ -58,7 +73,7 @@
     if (!(e.target.closest("button, input, select, label, a"))) return; // count real interactions only
     state.clicks++;
     state.levelClicks++;
-    hud.clicks.textContent = state.clicks;
+    hud.clicks.textContent = pad(state.clicks);
   }, true);
 
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -85,6 +100,9 @@
   /* ---------- level 1: cookie banner ---------- */
   const cookies = {
     title: "The cookie banner",
+    file: "dailybrew.com · cookie_consent.exe",
+    status: ["loading 847 partners…", "measuring your scroll depth…", "guessing your income bracket…", "respecting your privacy ♡"],
+    right: "cookies: 847",
     goal: "Read the article without sharing your data with anyone.",
     patterns: ["Visual interference", "Preselection"],
     render(ui, done) {
@@ -97,7 +115,7 @@
           h("div", { class: "ui-bar", style: "width:84%" }), h("div", { class: "ui-bar", style: "width:96%" })),
       );
       const banner = h("div", { class: "cb", role: "dialog", "aria-label": "Cookie consent" },
-        h("p", { class: "cb-title" }, "We value your privacy"),
+        h("p", { class: "cb-title" }, "🍪 We value your privacy"),
         h("p", { class: "cb-text" }, "We and our 847 partners store and access information on your device to personalise ads and content, measure performance, and develop and improve our services. By clicking \"Accept all\" you consent to all of the above."),
         h("div", { class: "cb-actions" },
           h("button", { class: "ui-btn-primary", onclick: () => done({ escaped: false, detail: "You clicked \"Accept all\". It was the only button that looked like a button.", almost: ["Sharing your browsing with 847 advertising partners"] }) }, "Accept all"),
@@ -143,6 +161,9 @@
   /* ---------- level 2: the pop-up offer ---------- */
   const popup = {
     title: "The pop-up offer",
+    file: "clayandco.shop · DONT_GO.exe",
+    status: ["detecting exit intent…", "generating urgency…", "extending offer (again)…"],
+    right: "1 pop-up · 3 queued",
     goal: "Close the pop-up without signing up for anything.",
     patterns: ["Confirmshaming", "Fake urgency", "Nagging"],
     render(ui, done) {
@@ -156,7 +177,7 @@
       const ext = h("span", { class: "po-ext" });
       const close = h("button", { class: "po-close", "aria-label": "Close", onclick: () => done({ escaped: true, detail: "You found the close button. It faded in, tiny and grey, a few seconds after the pop-up appeared." }) }, "✕");
       const body = h("div", { class: "po" },
-        h("p", { class: "po-kicker" }, "WAIT! DON'T GO YET"),
+        h("p", { class: "po-kicker" }, "WAIT!!! DON'T GO 😭"),
         h("p", { class: "po-title" }, "Get 20% off your first order"),
         timer, ext,
         h("div", {}, h("button", { class: "ui-btn-primary", style: "width:100%", onclick: () => askEmail() }, "YES! Give me 20% off")),
@@ -185,6 +206,9 @@
   /* ---------- level 3: checkout ---------- */
   const checkout = {
     title: "The checkout",
+    file: "clayandco.shop · checkout.exe",
+    status: ["adding things you'll love…", "saving fees for later…", "14 people are definitely here…"],
+    right: "cart: 1 item (+2)",
     goal: "Buy one mug and pay only its $12.00 sticker price.",
     patterns: ["Sneaking", "Preselection", "Hidden costs", "Fake scarcity"],
     render(ui, done) {
@@ -211,7 +235,7 @@
           h("div", { class: "co-grid" },
             h("div", { class: "co-card" },
               h("div", { class: "co-row" }, h("b", {}, "Speckled ceramic mug"), h("b", {}, "$12.00")),
-              h("p", { style: "margin:4px 0 0" }, h("span", { class: "co-badge" }, "🔥 Only 2 left!"), " ", h("span", { class: "ui-fine" }, viewers, " people are viewing this right now")),
+              h("p", { style: "margin:4px 0 0" }, h("span", { class: "co-badge" }, "🔥 ONLY 2 LEFT!!"), " ", h("span", { class: "ui-fine" }, viewers, " people are viewing this right now")),
               h("div", { class: "co-row" }, h("label", {}, protect, "Mug Protection Plan · 2 years"), h("span", { class: "ui-fine" }, "$4.99")),
               h("div", { class: "co-row" }, h("label", {}, donate, "Add a $1.00 donation to our community fund"), h("span", { class: "ui-fine" }, "$1.00"))),
             h("div", { class: "co-card" }, h("div", { class: "co-row" }, h("span", {}, "Delivery"), ship),
@@ -248,6 +272,9 @@
   /* ---------- level 4: email settings ---------- */
   const settings = {
     title: "The settings page",
+    file: "dailybrew.com · preferences.exe",
+    status: ["turning your no into a yes…", "double-checking the negatives…"],
+    right: "3 settings · 0 clear",
     goal: "Turn off marketing emails, data sharing and the weekly digest.",
     patterns: ["Trick wording", "Preselection"],
     render(ui, done) {
@@ -258,7 +285,7 @@
         h("div", { class: "ui-nav" }, h("span", { class: "ui-logo" }, "Daily Brew"), h("div", { class: "ui-links" }, h("span", {}, "Account"))),
         h("div", { class: "ui-body" },
           h("p", { class: "ui-h1" }, "Communication preferences"),
-          h("p", { class: "cb-text" }, "We only want to send you things you love."),
+          h("p", { class: "cb-text" }, "We only want to send you things you love ♡"),
           h("div", { class: "co-card", style: "margin-top:16px" },
             h("label", { class: "st-item", for: "s-a" }, a, "Uncheck this box if you would prefer not to receive marketing emails."),
             h("label", { class: "st-item", for: "s-b" }, b, "Check this box if you do not want us to not share your information with our trusted partners."),
@@ -281,6 +308,9 @@
   /* ---------- level 5: cancel a subscription ---------- */
   const cancel = {
     title: "The cancellation",
+    file: "watchhaus.tv · account.exe",
+    status: ["hiding the cancel button…", "preparing a retention offer…", "missing you already…"],
+    right: "member since forever",
     goal: "Cancel your WatchHaus Premium subscription ($17.99 a month).",
     patterns: ["Hard to cancel", "Nagging", "Confirmshaming", "Visual interference"],
     render(ui, done) {
@@ -345,7 +375,7 @@
       const final = go(() => {
         body.innerHTML = "";
         body.append(
-          h("p", { class: "ui-h1" }, "Are you sure?"),
+          h("p", { class: "ui-h1" }, "Are you sure?? 🥺"),
           h("p", { class: "cb-text" }, "If you cancel, you'll lose:"),
           h("ul", { class: "cx-loss" }, h("li", {}, "Your watch history and recommendations"), h("li", {}, "All 4 profiles"), h("li", {}, "Every download on your devices")),
           h("div", { style: "display:flex;gap:12px;align-items:center;flex-wrap:wrap" },
@@ -362,10 +392,11 @@
   const intro = () => {
     goalEl.textContent = "";
     hud.level.textContent = `0/${LEVELS.length}`;
+    chrome("try_to_escape.exe", ["ready.", "insert coin to continue.", "just kidding. press start."], "5 levels · about 3 min");
     stage.innerHTML = "";
     stage.append(h("div", { class: "dp-card" },
       h("p", { class: "label" }, "Dark Patterns · a playable demo"),
-      h("h1", {}, "Try to escape"),
+      h("h1", {}, "Try to escape", h("span", { class: "dp-blink" }, "_")),
       h("p", {}, "Five everyday tasks: a cookie banner, a pop-up, a checkout, a settings page and a cancellation. Each one is a made-up website with real dark patterns built in."),
       h("p", {}, "Do exactly what the goal says. We'll count your time, your clicks, and how many times you were tricked. After each level, the screen flips to show you the trick."),
       h("button", { class: "btn", onclick: () => startLevel(0) }, "Start →")));
@@ -376,6 +407,7 @@
     const lv = LEVELS[i];
     hud.level.textContent = `${i + 1}/${LEVELS.length}`;
     goalEl.textContent = lv.goal;
+    chrome(lv.file, lv.status, lv.right);
     flipTo(() => {
       const ui = h("div", { class: "ui" });
       let ended = false;
@@ -401,6 +433,7 @@
     if (!res.escaped) { state.tricked++; hud.tricked.textContent = state.tricked; }
     state.results.push({ title: lv.title, escaped: res.escaped, almost: res.almost || [], ms, clicks: state.levelClicks, patterns: lv.patterns });
     goalEl.textContent = "";
+    chrome("xray.exe", res.escaped ? ["scan complete. you got out.", "patterns identified."] : ["scan complete. you got got.", "patterns identified."], `level ${state.idx + 1}/${LEVELS.length}`);
     const last = state.idx === LEVELS.length - 1;
     flipTo(() => h("div", { class: "dp-card" },
       h("p", { class: "label" }, `Level ${state.idx + 1} of ${LEVELS.length} · X-ray`),
@@ -409,13 +442,14 @@
       h("p", {}, res.detail),
       res.almost && res.almost.length ? [h("p", { style: "margin-bottom:4px" }, "You agreed to:"), h("ul", { class: "dp-almost" }, res.almost.map((a) => h("li", {}, a)))] : null,
       h("div", { class: "dp-patterns" }, lv.patterns.map((p) => h("div", { class: "dp-pattern" }, h("h3", {}, p), h("p", {}, PATTERNS[p])))),
-      h("p", { class: "dp-stats" }, `${fmt(ms)} · ${state.levelClicks} clicks`),
+      h("p", { class: "dp-stats" }, `${fmt(ms)} · ${state.levelClicks} click${state.levelClicks === 1 ? "" : "s"}`),
       h("button", { class: "btn", onclick: () => (last ? receipt() : startLevel(state.idx + 1)) }, last ? "See your receipt →" : "Next level →")));
   };
 
   const receipt = () => {
     const seen = new Set(state.results.flatMap((r) => r.patterns));
     const agreed = state.results.flatMap((r) => r.almost);
+    chrome("receipt.txt", ["printing…", "printing… still printing…", "please do not unplug the printer."], `tricked ${state.tricked}/${LEVELS.length}`);
     flipTo(() => h("div", { class: "dp-card" },
       h("div", { class: "dp-receipt" },
         h("h2", {}, "YOUR RECEIPT"),
