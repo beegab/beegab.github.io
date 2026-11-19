@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Brianna Gabaldon · beegab — Portfolio</title>
+  <meta name="description" content="Portfolio of Brianna Gabaldon (beegab): a garden of ideas grown from ones and zeros. Each flower is a project.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' fill='%231d291e'/><text x='8' y='12.5' font-family='monospace' font-size='12' text-anchor='middle' fill='%23e8edc4'>1</text><text x='8' y='12.5' font-family='monospace' font-size='12' text-anchor='middle' fill='%23e8edc4' opacity='.5'>0</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="garden-page">
+  <canvas id="garden" aria-label="An animated garden of flowers drawn in ones and zeros. Each flower links to a project; use the index button for a text list."></canvas>
+
+  <a class="corner tl link" href="about.html" title="About me">|0⟩ beegab</a>
+  <button class="corner tr link" id="cornerList" type="button" aria-controls="panel" title="List of projects">portfolio |1⟩</button>
+  <div class="corner bl" aria-hidden="true"><span>|ψ⟩ = α|0⟩ + β|1⟩</span><span id="count"></span></div>
+
+  <header class="hud">
+    <p class="label" id="siteLabel">beegab · Portfolio</p>
+    <h1 id="siteTitle" class="title">Brianna Gabaldon</h1>
+    <p id="siteTagline" class="tagline">Ideas and works in progress. Each flower is a project.</p>
+  </header>
+
+  <div id="tip" class="tip" role="status" hidden></div>
+
+  <button id="listBtn" class="btn list-btn" aria-expanded="false" aria-controls="panel">Index of works</button>
+
+  <nav id="panel" class="panel" hidden aria-label="Projects">
+    <div class="panel-head">
+      <h2 class="label">Index</h2>
+      <button id="closePanel" class="close" aria-label="Close list">×</button>
+    </div>
+    <ul id="projectList"></ul>
+  </nav>
+
+  <script src="js/projects.js"></script>
+  <script src="js/binary.js"></script>
+  <script src="js/garden.js"></script>
+</body>
+</html>
