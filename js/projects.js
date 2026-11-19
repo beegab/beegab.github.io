@@ -114,18 +114,23 @@ window.PROJECTS = [
   {
     id: "opt-out",
     title: "Opt Out",
-    blurb: "A data broker profile of you, and the price tag on making it disappear.",
+    blurb: "Real data broker profiles of real people, and the real price of making them disappear.",
     description: [
       "Opt Out is a companion to Opt In. Where Opt In asks what people will give up to be seen, this piece asks what it costs to disappear, and who can afford to.",
-      "Data brokers already know a startling amount: every address you've lived at, your phone numbers, your relatives and who they're connected to, all a search away. The piece begins as a mirror. A wall assembles a people-search profile in ones and zeros: past homes become a trail across a map, phone numbers stack up, and family appears as a constellation of connections.",
-      "Next to the profile, a receipt prints. It lists every broker holding a copy and what it takes to get off each one: the forms, the waiting and the hours of your time, or the yearly fee for a service to do it for you. It's privacy sold as a subscription, and the data creeps back when you stop paying.",
-      "Then you can try to scrub yourself. Pay with time, holding down a button through each manual opt-out, or pay with money and watch the profile dissolve almost instantly. Walk away and it slowly grows back.",
-      "Underneath it all is a question about inequality. People who have to be public, for their work or their safety, are the easiest to find and the hardest to erase, while people with capital can buy their way out. The public price of privacy isn't the same for everyone.",
+      "To land, it has to be real. The profiles come from consenting volunteers, and from my own data. Data brokers already hold a startling amount: every address you've lived at, your phone numbers, your relatives and who they're connected to. In California alone, 581 data brokers are registered with the state. The wall rebuilds each volunteer's people-search profile in ones and zeros, past homes as a trail across a map, phone numbers stacking up, family as a constellation, and names the sites it came from: Spokeo, Whitepages, BeenVerified, Intelius, TruePeopleSearch, FastPeopleSearch, Radaris, CheckPeople, PublicDataUSA.",
+      "Next to each profile, a receipt prints with the real prices. Removal services sell privacy as a subscription: DeleteMe charges $129 a year for one person, Incogni about $8 a month, Kanary $250 a year. Stop paying, and the protection stops with it.",
+      "The cheaper route costs time instead. In a 2024 Consumer Reports study, manual opt-outs actually beat the paid services: about 70% of listings were gone within a week, while the services removed anywhere from 0% to 59%. Doing it yourself means a form, a confirmation email and a wait for every single site. Even the best public fix depends on your address: California's free DROP platform lets residents send one deletion request to every registered broker, but only if you live in California.",
+      "So the piece asks visitors to try. Pay with time, holding down a button through each manual opt-out, or pay with money and watch the profile dissolve almost instantly. Walk away and it slowly grows back. People who have to be public, for their work or their safety, are the easiest to find and the hardest to erase, while people with capital can buy their way out. The public price of privacy isn't the same for everyone.",
     ],
     tags: ["data brokers", "privacy", "installation", "inequality", "data"],
     status: "idea",
     flower: "tulip",
     color: "lilac",
+    links: [
+      { label: "California data broker registry", href: "https://cppa.ca.gov/data_broker_registry" },
+      { label: "Consumer Reports removal study", href: "https://innovation.consumerreports.org/new-report-data-defense-evaluating-people-search-site-removal-services/" },
+      { label: "California DROP", href: "https://cppa.ca.gov/data_brokers" },
+    ],
   },
   {
     id: "opt-in",
